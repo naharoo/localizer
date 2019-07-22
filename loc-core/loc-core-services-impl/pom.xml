@@ -79,13 +79,6 @@
             <version>${project.version}</version>
         </dependency>
 
-        <!--H2 for Tests-->
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>test</scope>
-        </dependency>
-
         <!--JAX-B for Java 11-->
         <dependency>
             <groupId>com.sun.activation</groupId>
