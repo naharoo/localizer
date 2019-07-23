@@ -1,5 +1,6 @@
-package com.naharoo.localizer.integrationtest;
+package com.naharoo.localizer.e2e;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
@@ -23,10 +24,11 @@ import java.lang.annotation.Target;
 @TestConfiguration
 @WebAppConfiguration
 @Import(GlobalTestConfiguration.class)
-@ActiveProfiles(value = {"test", "integrationtest"})
-@EnabledIf(expression = "#{environment.acceptsProfiles('integrationtest')}", loadContext = true)
-@ImportResource(locations = "classpath:com/naharoo/localizer/integrationtest/localizer-integrationtest-context.xml")
+@Tag("e2e")
+@ActiveProfiles(value = {"test", "e2e"})
+@EnabledIf(expression = "#{environment.acceptsProfiles('e2e')}", loadContext = true)
+@ImportResource(locations = "classpath:com/naharoo/localizer/e2e/localizer-e2e-context.xml")
 @Transactional
 @ImportAutoConfiguration
-public @interface IntegrationTest {
+public @interface E2ETest {
 }

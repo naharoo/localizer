@@ -1,4 +1,4 @@
-package com.naharoo.localizer.integrationtest;
+package com.naharoo.localizer.e2e;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.test.context.TestConfiguration;

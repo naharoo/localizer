@@ -1,8 +1,8 @@
-package com.naharoo.localizer.integrationtest.locale;
+package com.naharoo.localizer.e2e.locale;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.naharoo.localizer.api.facade.endpoint.locale.LocaleModificationRequestDto;
-import com.naharoo.localizer.integrationtest.IntegrationTest;
+import com.naharoo.localizer.e2e.E2ETest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -16,8 +16,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@IntegrationTest
-public class LocaleIntegrationTest {
+@E2ETest
+class CreateLocaleE2ETest {
 
     @Autowired
     MockMvc mockMvc;

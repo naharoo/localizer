@@ -1,6 +1,7 @@
 package com.naharoo.localizer.utils;
 
 import com.naharoo.localizer.test.NullableStringConverter;
+import com.naharoo.localizer.test.UnitTest;
 import org.assertj.core.util.Sets;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,9 +20,10 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@UnitTest
 class ConditionsTest {
 
-    private static final Stream<Collection> notNullOrEmptyCollections() {
+    private static Stream<Collection> notNullOrEmptyCollections() {
         return Stream.of(
                 Arrays.asList(1, 2, 3),
                 Sets.newLinkedHashSet("asd", "zxc", "qwe")

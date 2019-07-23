@@ -12,7 +12,7 @@
     <context:annotation-config/>
 
     <context:property-placeholder
-        location="classpath:com/naharoo/localizer/integrationtest/localizer-integrationtest.properties"
+        location="classpath:com/naharoo/localizer/e2e/localizer-e2e.properties"
         ignore-unresolvable="true" local-override="true"/>
 
     <context:component-scan base-package="com.naharoo.localizer.api.facade"/>
@@ -22,7 +22,7 @@
     <jdbc:embedded-database id="dataSource" type="H2"/>
 
     <jdbc:initialize-database>
-        <jdbc:script location="classpath:com/naharoo/localizer/integrationtest/db/scripts/l_locale.sql"/>
+        <jdbc:script location="classpath:com/naharoo/localizer/e2e/db/scripts/l_locale.sql"/>
     </jdbc:initialize-database>
 
     <bean id="hibernateJpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
