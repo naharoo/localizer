@@ -8,7 +8,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.validation.constraints.NotBlank;
 
-public class LocaleModificationRequestDto {
+public class LocaleCreationRequestDto {
 
     @NotBlank
     private final String key;
@@ -17,7 +17,7 @@ public class LocaleModificationRequestDto {
     private final String name;
 
     @JsonCreator
-    public LocaleModificationRequestDto(
+    public LocaleCreationRequestDto(
         @JsonProperty("key") final String key,
         @JsonProperty("name") final String name
     ) {
@@ -39,7 +39,7 @@ public class LocaleModificationRequestDto {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        LocaleModificationRequestDto that = (LocaleModificationRequestDto) o;
+        LocaleCreationRequestDto that = (LocaleCreationRequestDto) o;
 
         return new EqualsBuilder()
             .append(key, that.key)

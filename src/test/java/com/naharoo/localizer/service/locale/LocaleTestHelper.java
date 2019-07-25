@@ -2,6 +2,8 @@ package com.naharoo.localizer.service.locale;
 
 import com.naharoo.localizer.domain.locale.Locale;
 import com.naharoo.localizer.domain.locale.LocaleCreationRequest;
+import com.naharoo.localizer.endpoint.locale.LocaleCreationRequestDto;
+import com.naharoo.localizer.endpoint.locale.LocaleDto;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -41,6 +43,28 @@ public final class LocaleTestHelper {
         return locale;
     }
 
+    public static LocaleDto createRandomLocaleDto() {
+        return createLocaleDto(
+            UUID.randomUUID().toString(),
+            UUID.randomUUID().toString(),
+            UUID.randomUUID().toString(),
+            LocalDateTime.now(),
+            LocalDateTime.now(),
+            LocalDateTime.now()
+        );
+    }
+
+    public static LocaleDto createLocaleDto(
+        final String id,
+        final String key,
+        final String name,
+        final LocalDateTime created,
+        final LocalDateTime updated,
+        final LocalDateTime deleted
+    ) {
+        return new LocaleDto(id, key, name, created, updated, deleted);
+    }
+
     public static LocaleCreationRequest createRandomLocaleCreationRequest() {
         return createLocaleCreationRequest(
             UUID.randomUUID().toString(),
@@ -50,5 +74,16 @@ public final class LocaleTestHelper {
 
     public static LocaleCreationRequest createLocaleCreationRequest(final String key, final String name) {
         return new LocaleCreationRequest(key, name);
+    }
+
+    public static LocaleCreationRequestDto createRandomLocaleCreationRequestDto() {
+        return createLocaleCreationRequestDto(
+            UUID.randomUUID().toString(),
+            UUID.randomUUID().toString()
+        );
+    }
+
+    public static LocaleCreationRequestDto createLocaleCreationRequestDto(final String key, final String name) {
+        return new LocaleCreationRequestDto(key, name);
     }
 }

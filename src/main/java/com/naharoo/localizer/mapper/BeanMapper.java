@@ -3,7 +3,7 @@ package com.naharoo.localizer.mapper;
 import com.naharoo.localizer.domain.locale.Locale;
 import com.naharoo.localizer.domain.locale.LocaleCreationRequest;
 import com.naharoo.localizer.endpoint.locale.LocaleDto;
-import com.naharoo.localizer.endpoint.locale.LocaleModificationRequestDto;
+import com.naharoo.localizer.endpoint.locale.LocaleCreationRequestDto;
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.converter.ConverterFactory;
 import ma.glasnost.orika.converter.builtin.PassThroughConverter;
@@ -33,7 +33,7 @@ public class BeanMapper extends ConfigurableMapper {
             .byDefault()
             .register();
 
-        factory.classMap(LocaleCreationRequest.class, LocaleModificationRequestDto.class)
+        factory.classMap(LocaleCreationRequest.class, LocaleCreationRequestDto.class)
             .constructorB("key", "name")
             .byDefault()
             .register();

@@ -25,7 +25,7 @@ public class LocalesEndpointImpl implements LocalesEndpoint {
     }
 
     @Override
-    public LocaleDto create(final LocaleModificationRequestDto modificationRequestDto) {
+    public LocaleDto create(final LocaleCreationRequestDto modificationRequestDto) {
         expectNotNull(modificationRequestDto, "modificationRequestDto cannot be null.");
         final String key = modificationRequestDto.getKey();
         expectNotEmpty(key, "modificationRequestDto.key cannot be empty.");

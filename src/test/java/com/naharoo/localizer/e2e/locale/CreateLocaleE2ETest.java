@@ -2,7 +2,7 @@ package com.naharoo.localizer.e2e.locale;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.naharoo.localizer.testutils.E2ETest;
-import com.naharoo.localizer.endpoint.locale.LocaleModificationRequestDto;
+import com.naharoo.localizer.endpoint.locale.LocaleCreationRequestDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -30,7 +30,7 @@ class CreateLocaleE2ETest {
         // Given
         final String key = UUID.randomUUID().toString();
         final String name = UUID.randomUUID().toString();
-        final LocaleModificationRequestDto creationRequest = new LocaleModificationRequestDto(key, name);
+        final LocaleCreationRequestDto creationRequest = new LocaleCreationRequestDto(key, name);
 
         // When
         final ResultActions result = mockMvc

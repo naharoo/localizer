@@ -14,5 +14,5 @@ public interface LocalesEndpoint {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    LocaleDto create(@Valid @NotNull @RequestBody LocaleModificationRequestDto modificationRequestDto);
+    LocaleDto create(@Valid @NotNull @RequestBody LocaleCreationRequestDto modificationRequestDto);
 }
