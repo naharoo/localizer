@@ -1,0 +1,38 @@
+localizer:
+  api:
+    port: 8080
+    context-path: rest
+spring:
+  datasource:
+    url: jdbc:postgresql://thewhitewall.club:5432/localizer
+    username: localizer
+    password: localizer
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      connection-timeout: 20000
+      minimum-idle: 10
+      maximum-pool-size: 35
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    show-sql: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        cache:
+          use_query_cache: true
+          use_second_level_cache: true
+          region:
+            factory_class: jcache
+        temp:
+          use_jdbc_metadata_defaults: false
+        javax:
+          cache:
+            missing_cache_strategy: create-warn
+            provider: org.ehcache.jsr107.EhcacheCachingProvider
+            uri: classpath:com/naharoo/localizer/ehcache.xml
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration

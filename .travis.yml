@@ -1,0 +1,17 @@
+language: java
+sudo: false
+jdk:
+  - oraclejdk11
+addons:
+  sonarcloud:
+    organization: "naharoo"
+    token:
+      secure: "b1TIJXc/f81w3VcD58EuTpUpBaceCmMMQDAOseKhxOKKnROGs2cReQioOb+is4GWbJItvRcvXMRTPlLuIbcwsowuAMe/qz+O0H7zDkV0aGRvtizNkbQ9Y2tuaNwY4cZo18VpEjC+15g8VlGA/CG2cIsQ5ZzS6IpchAfX7cjYcL7haj/5BRDVfJVK5FX2kH90BSMLyOYYfMdLrbsuGwQtwUxXoHED7Ys1yEYr1iOXLy6mq5NOJ3ce3kJOPEBpCgLsRSvilCEnC7z72KIuKy1pbbNdtCHYIiuDHEoVnir4Z37bs0wkEDxPHgYkyz+aQC0D71aUrean37PPrRZcIAYtYaDtiK4blvGrhE3hSPIjLA1Ygc5vJ2x7pzhvZ6jpCrMQyya/g91K+E5AoulLqY1gOE7M3dUvDmha8J6c2h1q+38fpCexKGeNj+5uLQtL0CV6XyPeok0XdgLzKg9SW/GjKjD9+sZS5xrQUseszXgy9hV4hjm2N2/4G6wLbfPDjWhXUSQbkQI5e9FsJVsqWPAD5GFXSZLkVmob5H4rVrO0tyijZMx4HirC7Ri2YYMZiNwRGCXVEVdbJwpqukdxQhu5whi65N1eCJr6NRCfEly+nZav8xgks3OtLVyTjAQZ5Tknlh/40xuh3zD7hXq+ubxSbxArviFrcGJ3BCWjvABAel8="
+jobs:
+  include:
+    - stage: Build
+      script: mvn clean package -DskipTests
+    - stage: Test
+      script: mvn clean verify
+    - stage: Analyse
+      script: mvn org.jacoco:jacoco-maven-plugin:prepare-agent sonar:sonar
