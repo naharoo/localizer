@@ -118,6 +118,5 @@ class LocalesEndpointImplTest extends AbstractEndpointTest {
 
         verify(localeService).getById(id);
         verify(mapper).map(locale, LocaleDto.class);
-
     }
 }
