@@ -124,7 +124,7 @@ class LocaleServiceImplTest {
         final Locale locale = LocaleTestHelper.createRandomLocale();
         final Optional<Locale> localeOpt = Optional.of(locale);
 
-        when(repository.findByKeyIgnoreCase(key))
+        when(repository.findByKeyAndDeletedIsNullIgnoreCase(key))
             .thenReturn(localeOpt);
 
         // When
@@ -134,7 +134,7 @@ class LocaleServiceImplTest {
         assertThat(actualOpt)
             .isNotEmpty()
             .get().isEqualTo(locale);
-        verify(repository).findByKeyIgnoreCase(key);
+        verify(repository).findByKeyAndDeletedIsNullIgnoreCase(key);
     }
 
     @ParameterizedTest(name = "Input: {arguments}")

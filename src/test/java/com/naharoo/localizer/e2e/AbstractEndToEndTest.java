@@ -1,4 +1,4 @@
-package com.naharoo.localizer.testutils;
+package com.naharoo.localizer.e2e;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,18 +9,30 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
 @ExtendWith({SpringExtension.class, MockitoExtension.class})
 @WebMvcTest
 @Tag("e2e")
 @ActiveProfiles(value = {"test", "e2e"})
 @ImportResource(locations = "classpath:com/naharoo/localizer/e2e/localizer-e2e-test-context.xml")
 @Transactional
-public @interface E2ETest {
+public abstract class AbstractEndToEndTest {
+
+    @PersistenceContext
+    EntityManager entityManager;
+
+    protected void flush() {
+        entityManager.flush();
+    }
+
+    protected void clear() {
+        entityManager.clear();
+    }
+
+    protected void flushAndClear() {
+        flush();
+        clear();
+    }
 }

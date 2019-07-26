@@ -8,6 +8,7 @@ import com.naharoo.localizer.service.locale.LocaleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -25,6 +26,7 @@ public class LocaleServiceImpl implements LocaleService {
         this.localeRepository = localeRepository;
     }
 
+    @Transactional
     @Override
     public Locale create(final LocaleCreationRequest creationRequest) {
         expectNotNull(creationRequest, "creationRequest cannot be null.");
@@ -58,7 +60,7 @@ public class LocaleServiceImpl implements LocaleService {
 
         logger.trace("Finding Locale by key '{}'...", key);
 
-        final Optional<Locale> localeOpt = localeRepository.findByKeyIgnoreCase(key);
+        final Optional<Locale> localeOpt = localeRepository.findByKeyAndDeletedIsNullIgnoreCase(key);
 
         logger.debug("Done finding Locale by key '{}'...", key);
         return localeOpt;
