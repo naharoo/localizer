@@ -10,4 +10,8 @@ public interface LocaleService {
     Locale create(LocaleCreationRequest creationRequest);
 
     Optional<Locale> findByKey(String key);
+
+    Locale getById(String id);
+
+    Optional<Locale> findById(String id);
 }

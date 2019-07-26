@@ -3,9 +3,11 @@ package com.naharoo.localizer.service.locale.impl;
 import com.naharoo.localizer.domain.locale.Locale;
 import com.naharoo.localizer.domain.locale.LocaleCreationRequest;
 import com.naharoo.localizer.exception.ResourceAlreadyExistsException;
+import com.naharoo.localizer.exception.ResourceNotFoundException;
 import com.naharoo.localizer.repository.LocaleRepository;
 import com.naharoo.localizer.service.locale.LocaleTestHelper;
 import com.naharoo.localizer.testutils.UnitTest;
+import com.naharoo.localizer.testutils.source.EmptyStringSource;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -124,7 +126,7 @@ class LocaleServiceImplTest {
         final Locale locale = LocaleTestHelper.createRandomLocale();
         final Optional<Locale> localeOpt = Optional.of(locale);
 
-        when(repository.findByKeyAndDeletedIsNullIgnoreCase(key))
+        when(repository.findByKeyIgnoreCaseAndDeletedIsNull(key))
             .thenReturn(localeOpt);
 
         // When
@@ -134,7 +136,7 @@ class LocaleServiceImplTest {
         assertThat(actualOpt)
             .isNotEmpty()
             .get().isEqualTo(locale);
-        verify(repository).findByKeyAndDeletedIsNullIgnoreCase(key);
+        verify(repository).findByKeyIgnoreCaseAndDeletedIsNull(key);
     }
 
     @ParameterizedTest(name = "Input: {arguments}")
@@ -149,5 +151,90 @@ class LocaleServiceImplTest {
 
         // Then
         // IllegalArgumentException is thrown
+    }
+
+    @ParameterizedTest(name = "Input: {arguments}")
+    @EmptyStringSource
+    @DisplayName("GetById should throw IllegalArgumentException when input is not valid")
+    void getById_illegalArgs(final String id) {
+        // Given
+        // Blank id
+
+        // When
+        assertThrows(IllegalArgumentException.class, () -> service.getById(id));
+
+        // Then
+        // IllegalArgumentException is thrown
+    }
+
+    @Test
+    @DisplayName("GetById should throw ResourceNotFoundException when Locale with id is not found")
+    void getById_resourceNotFoundException() {
+        // Given
+        final String id = UUID.randomUUID().toString();
+
+        final LocaleServiceImpl spy = spy(new LocaleServiceImpl(repository));
+
+        when(spy.findById(id))
+            .thenReturn(Optional.empty());
+
+        // When
+        assertThrows(ResourceNotFoundException.class, () -> service.getById(id));
+
+        // Then
+        verify(spy).findById(id);
+    }
+
+    @Test
+    @DisplayName("GetById should return proper Locale when it is found by id")
+    void getById_normalCase() {
+        // Given
+        final Locale locale = LocaleTestHelper.createRandomLocale();
+        final String id = locale.getId();
+
+        final LocaleServiceImpl spy = spy(new LocaleServiceImpl(repository));
+
+        when(spy.findById(id))
+            .thenReturn(Optional.of(locale));
+
+        // When
+        final Locale actualLocale = service.getById(id);
+
+        // Then
+        assertThat(actualLocale)
+            .isNotNull()
+            .isEqualTo(locale);
+    }
+
+    @ParameterizedTest(name = "Input: {arguments}")
+    @EmptyStringSource
+    @DisplayName("FindById should throw IllegalArgumentException when input is not valid")
+    void findById_illegalArgs(final String id) {
+        // Given
+        // Blank id
+
+        // When
+        assertThrows(IllegalArgumentException.class, () -> service.findById(id));
+
+        // Then
+        // IllegalArgumentException is thrown
+    }
+
+    @Test
+    @DisplayName("FindById should return empty Optional when nor locale has been found for id")
+    void findById_normalCase() {
+        // Given
+        final String id = UUID.randomUUID().toString();
+
+        when(repository.findByIdAndDeletedIsNull(id))
+            .thenReturn(Optional.empty());
+
+        // When
+        final Optional<Locale> localeOpt = service.findById(id);
+
+        // Then
+        assertThat(localeOpt)
+            .isNotNull()
+            .isEmpty();
     }
 }

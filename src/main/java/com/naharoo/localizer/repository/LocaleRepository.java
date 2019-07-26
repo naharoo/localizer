@@ -10,5 +10,8 @@ import java.util.Optional;
 public interface LocaleRepository extends JpaRepository<Locale, String> {
 
     @QueryHints(@QueryHint(name = "org.hibernate.cacheable", value = "true"))
-    Optional<Locale> findByKeyAndDeletedIsNullIgnoreCase(String key);
+    Optional<Locale> findByKeyIgnoreCaseAndDeletedIsNull(String key);
+
+    @QueryHints(@QueryHint(name = "org.hibernate.cacheable", value = "true"))
+    Optional<Locale> findByIdAndDeletedIsNull(String id);
 }

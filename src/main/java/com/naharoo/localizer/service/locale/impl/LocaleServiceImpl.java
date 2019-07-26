@@ -3,6 +3,7 @@ package com.naharoo.localizer.service.locale.impl;
 import com.naharoo.localizer.domain.locale.Locale;
 import com.naharoo.localizer.domain.locale.LocaleCreationRequest;
 import com.naharoo.localizer.exception.ResourceAlreadyExistsException;
+import com.naharoo.localizer.exception.ResourceNotFoundException;
 import com.naharoo.localizer.repository.LocaleRepository;
 import com.naharoo.localizer.service.locale.LocaleService;
 import org.slf4j.Logger;
@@ -54,15 +55,50 @@ public class LocaleServiceImpl implements LocaleService {
         return createdLocale;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<Locale> findByKey(final String key) {
         expectNotEmpty(key, "key cannot be empty.");
 
         logger.trace("Finding Locale by key '{}'...", key);
 
-        final Optional<Locale> localeOpt = localeRepository.findByKeyAndDeletedIsNullIgnoreCase(key);
+        final Optional<Locale> localeOpt = localeRepository.findByKeyIgnoreCaseAndDeletedIsNull(key);
 
         logger.debug("Done finding Locale by key '{}'...", key);
+        return localeOpt;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Locale getById(final String id) {
+        expectNotEmpty(id, "id cannot be empty.");
+        logger.trace("Getting Locale by id:'{}'...", id);
+
+        final Optional<Locale> localeOpt = findById(id);
+        if (localeOpt.isEmpty()) {
+            logger.warn("No Locale has been found with id '{}'.", id);
+            throw ResourceNotFoundException.with(
+                Locale.class,
+                "id",
+                id
+            );
+        }
+        final Locale result = localeOpt.get();
+
+        logger.debug("Done getting Locale by id:'{}'.", id);
+        return result;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Optional<Locale> findById(final String id) {
+        expectNotEmpty(id, "id cannot be empty.");
+
+        logger.trace("Finding Locale by id '{}'...", id);
+
+        final Optional<Locale> localeOpt = localeRepository.findByIdAndDeletedIsNull(id);
+
+        logger.debug("Done finding Locale by id '{}'...", id);
         return localeOpt;
     }
 }
