@@ -1,7 +1,9 @@
 package com.naharoo.localizer.service.locale;
 
+import com.naharoo.localizer.domain.GenericListResponse;
 import com.naharoo.localizer.domain.locale.Locale;
 import com.naharoo.localizer.domain.locale.LocaleCreationRequest;
+import com.naharoo.localizer.domain.locale.LocaleSearchRequest;
 
 import java.util.Optional;
 
@@ -14,4 +16,6 @@ public interface LocaleService {
     Locale getById(String id);
 
     Optional<Locale> findById(String id);
+
+    GenericListResponse<Locale> search(LocaleSearchRequest searchRequest);
 }

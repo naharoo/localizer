@@ -1,12 +1,18 @@
 package com.naharoo.localizer.service.locale;
 
+import com.naharoo.localizer.domain.SortOrder;
 import com.naharoo.localizer.domain.locale.Locale;
 import com.naharoo.localizer.domain.locale.LocaleCreationRequest;
+import com.naharoo.localizer.domain.locale.LocaleSearchRequest;
+import com.naharoo.localizer.domain.locale.LocaleSortField;
 import com.naharoo.localizer.endpoint.locale.LocaleCreationRequestDto;
 import com.naharoo.localizer.endpoint.locale.LocaleDto;
+import com.naharoo.localizer.endpoint.locale.LocaleSearchRequestDto;
 
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 public final class LocaleTestHelper {
 
@@ -85,5 +91,47 @@ public final class LocaleTestHelper {
 
     public static LocaleCreationRequestDto createLocaleCreationRequestDto(final String key, final String name) {
         return new LocaleCreationRequestDto(key, name);
+    }
+
+    public static LocaleSearchRequestDto createRandomLocaleSearchRequestDto() {
+        return createLocaleSearchRequestDto(
+            ThreadLocalRandom.current().nextInt(),
+            ThreadLocalRandom.current().nextInt(),
+            getRandomLocaleSorField(),
+            SortOrder.ASC
+        );
+    }
+
+    public static LocaleSearchRequestDto createLocaleSearchRequestDto(
+        final Integer from,
+        final Integer size,
+        final LocaleSortField sortField,
+        final SortOrder sortOrder
+    ) {
+        return new LocaleSearchRequestDto(from, size, sortField, sortOrder);
+    }
+
+    public static LocaleSearchRequest createRandomLocaleSearchRequest() {
+        return createLocaleSearchRequest(
+            0,
+            20,
+            getRandomLocaleSorField(),
+            SortOrder.ASC
+        );
+    }
+
+    public static LocaleSearchRequest createLocaleSearchRequest(
+        final Integer from,
+        final Integer size,
+        final LocaleSortField sortField,
+        final SortOrder sortOrder
+    ) {
+        return new LocaleSearchRequest(from, size, sortField, sortOrder);
+    }
+
+    public static LocaleSortField getRandomLocaleSorField() {
+        final Class<LocaleSortField> clazz = LocaleSortField.class;
+        int x = new SecureRandom().nextInt(clazz.getEnumConstants().length);
+        return clazz.getEnumConstants()[x];
     }
 }

@@ -1,13 +1,16 @@
 package com.naharoo.localizer.service.locale.impl;
 
+import com.naharoo.localizer.domain.GenericListResponse;
 import com.naharoo.localizer.domain.locale.Locale;
 import com.naharoo.localizer.domain.locale.LocaleCreationRequest;
+import com.naharoo.localizer.domain.locale.LocaleSearchRequest;
 import com.naharoo.localizer.exception.ResourceAlreadyExistsException;
 import com.naharoo.localizer.exception.ResourceNotFoundException;
 import com.naharoo.localizer.repository.LocaleRepository;
 import com.naharoo.localizer.service.locale.LocaleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +18,7 @@ import java.util.Optional;
 
 import static com.naharoo.localizer.utils.Assertions.expectNotEmpty;
 import static com.naharoo.localizer.utils.Assertions.expectNotNull;
+import static com.naharoo.localizer.utils.PaginationUtils.toPageRequest;
 
 @Service
 public class LocaleServiceImpl implements LocaleService {
@@ -101,4 +105,34 @@ public class LocaleServiceImpl implements LocaleService {
         logger.debug("Done finding Locale by id '{}'...", id);
         return localeOpt;
     }
+
+    @Transactional(readOnly = true)
+    @Override
+    public GenericListResponse<Locale> search(final LocaleSearchRequest searchRequest) {
+        expectNotNull(searchRequest, "searchRequest cannot be null.");
+
+        logger.trace("Searching for Locales...");
+
+        final Page<Locale> page = localeRepository.search(
+            toPageRequest(
+                searchRequest.getFrom(),
+                searchRequest.getSize(),
+                searchRequest.getSortField(),
+                searchRequest.getSortOrder()
+            )
+        );
+
+        final GenericListResponse<Locale> result = new GenericListResponse<>(
+            page.getContent(),
+            page.getTotalElements()
+        );
+
+        logger.debug(
+            "Done searching for {} of total {} Locales.",
+            result.getItems().size(),
+            result.getTotalItems()
+        );
+        return result;
+    }
+
 }

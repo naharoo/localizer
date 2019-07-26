@@ -1,9 +1,12 @@
 package com.naharoo.localizer.endpoint.locale;
 
+import com.naharoo.localizer.domain.GenericListResponse;
 import com.naharoo.localizer.domain.locale.Locale;
 import com.naharoo.localizer.domain.locale.LocaleCreationRequest;
+import com.naharoo.localizer.domain.locale.LocaleSearchRequest;
 import com.naharoo.localizer.mapper.BeanMapper;
 import com.naharoo.localizer.service.locale.LocaleService;
+import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.annotation.Validated;
@@ -55,5 +58,29 @@ public class LocalesEndpointImpl implements LocalesEndpoint {
 
         logger.info("Getting Locale by id:'{}'.", id);
         return result;
+    }
+
+    @Override
+    public GenericListResponse<LocaleDto> search(final LocaleSearchRequestDto requestDto) {
+        expectNotNull(requestDto, "requestDto cannot be null.");
+
+        logger.debug("Searching for Locales...");
+        final StopWatch stopwatch = StopWatch.createStarted();
+
+        final LocaleSearchRequest request = mapper.map(requestDto, LocaleSearchRequest.class);
+        final GenericListResponse<Locale> locales = localeService.search(request);
+        final GenericListResponse<LocaleDto> response = new GenericListResponse<>(
+            mapper.mapAsList(locales.getItems(), LocaleDto.class),
+            locales.getTotalItems()
+        );
+
+        stopwatch.stop();
+        logger.debug(
+            "Done searching for {} of total {} Locales in {}ms.",
+            response.getItems().size(),
+            response.getTotalItems(),
+            stopwatch.getTime()
+        );
+        return response;
     }
 }

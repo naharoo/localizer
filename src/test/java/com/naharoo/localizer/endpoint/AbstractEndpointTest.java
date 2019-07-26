@@ -7,6 +7,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.validateMockitoUsage;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
@@ -23,6 +27,16 @@ public abstract class AbstractEndpointTest {
         verifyNoMoreInteractions(
             mapper
         );
+    }
+
+    protected void assertListAreFieldByFieldEqual(final List expected, final List actual) {
+        assertNotNull(expected);
+        assertNotNull(actual);
+        assertEquals(actual.size(), expected.size());
+        for (int i = 0; i < actual.size(); i++) {
+            assertThat(actual.get(i))
+                .isEqualToComparingFieldByField(expected.get(i));
+        }
     }
 }
 

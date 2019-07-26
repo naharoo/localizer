@@ -1,7 +1,9 @@
 package com.naharoo.localizer.service.locale.impl;
 
+import com.naharoo.localizer.domain.GenericListResponse;
 import com.naharoo.localizer.domain.locale.Locale;
 import com.naharoo.localizer.domain.locale.LocaleCreationRequest;
+import com.naharoo.localizer.domain.locale.LocaleSearchRequest;
 import com.naharoo.localizer.exception.ResourceAlreadyExistsException;
 import com.naharoo.localizer.exception.ResourceNotFoundException;
 import com.naharoo.localizer.repository.LocaleRepository;
@@ -14,15 +16,21 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.NullSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
+import static com.naharoo.localizer.utils.PaginationUtils.toPageRequest;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @UnitTest
@@ -236,5 +244,57 @@ class LocaleServiceImplTest {
         assertThat(localeOpt)
             .isNotNull()
             .isEmpty();
+    }
+
+    @ParameterizedTest(name = "Input: {arguments}")
+    @NullSource
+    @DisplayName("Search should throw IllegalArgumentException when Input is not valid")
+    void search_illegalArgs(final LocaleSearchRequest request) {
+        // Given
+        // Illegal Input
+
+        // When
+        assertThrows(IllegalArgumentException.class, () -> service.search(request));
+
+        // Then
+        // IllegalArgumentException is thrown
+    }
+
+    @Test
+    @DisplayName("Search should return proper data when input is correct")
+    void search_normalCase() {
+        // Given
+        final LocaleSearchRequest searchRequest = LocaleTestHelper.createRandomLocaleSearchRequest();
+        final PageRequest pageRequest = toPageRequest(
+            searchRequest.getFrom(),
+            searchRequest.getSize(),
+            searchRequest.getSortField(),
+            searchRequest.getSortOrder()
+        );
+
+        final List<Locale> expectedLocales = Arrays.asList(
+            LocaleTestHelper.createRandomLocale(),
+            LocaleTestHelper.createRandomLocale(),
+            LocaleTestHelper.createRandomLocale()
+        );
+        final int expectedTotalItems = expectedLocales.size();
+
+        when(repository.search(pageRequest))
+            .thenReturn(new PageImpl<>(expectedLocales, pageRequest, expectedTotalItems));
+
+        // When
+        final GenericListResponse<Locale> response = service.search(searchRequest);
+
+        // Then
+        assertNotNull(response);
+        final List<Locale> actualLocales = response.getItems();
+        assertThat(actualLocales)
+            .isNotNull()
+            .isNotEmpty()
+            .containsExactlyElementsOf(expectedLocales);
+        final long actualTotalItems = response.getTotalItems();
+        assertEquals(expectedTotalItems, actualTotalItems);
+
+        verify(repository).search(pageRequest);
     }
 }

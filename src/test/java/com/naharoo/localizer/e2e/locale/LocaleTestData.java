@@ -9,11 +9,13 @@ public class LocaleTestData {
     private final String id;
     private final String key;
     private final String name;
+    private final boolean deleted;
 
-    public LocaleTestData(final String id, final String key, final String name) {
+    public LocaleTestData(final String id, final String key, final String name, final boolean deleted) {
         this.id = id;
         this.key = key;
         this.name = name;
+        this.deleted = deleted;
     }
 
     public String getId() {
@@ -28,6 +30,10 @@ public class LocaleTestData {
         return name;
     }
 
+    public boolean isDeleted() {
+        return deleted;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
@@ -40,6 +46,7 @@ public class LocaleTestData {
             .append(id, that.id)
             .append(key, that.key)
             .append(name, that.name)
+            .append(deleted, that.deleted)
             .isEquals();
     }
 
@@ -49,6 +56,7 @@ public class LocaleTestData {
             .append(id)
             .append(key)
             .append(name)
+            .append(deleted)
             .toHashCode();
     }
 
@@ -58,6 +66,7 @@ public class LocaleTestData {
             .append("id", id)
             .append("key", key)
             .append("name", name)
+            .append("deleted", deleted)
             .toString();
     }
 }
