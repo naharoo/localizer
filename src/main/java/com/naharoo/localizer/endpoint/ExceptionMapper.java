@@ -8,13 +8,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import javax.persistence.EntityManager;
 import java.util.Collections;
 
 @ControllerAdvice
 public class ExceptionMapper {
 
-    private static final Logger logger = LoggerFactory.getLogger(EntityManager.class);
+    private static final Logger logger = LoggerFactory.getLogger(ExceptionMapper.class);
 
     @ExceptionHandler(ResourceAlreadyExistsException.class)
     public ResponseEntity<LocalizerApiError> handleResourceAlreadyExistsException(final ResourceAlreadyExistsException e) {
