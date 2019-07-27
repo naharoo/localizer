@@ -8,7 +8,9 @@ cache:
     - $HOME/.m2
 stages:
   - name: MASTER_BUILD_TEST_ANALYSE_DEPLOY
-    if: branch = master
+    if: branch = master AND type != pull_request
+  - name: MASTER_BUILD_TEST_ANALYSE
+    if: type = pull_request
   - name: CUSTOM_BRANCH_BUILD_TEST
     if: branch != master
 jobs:
@@ -22,3 +24,5 @@ jobs:
       script: mvn clean deploy org.jacoco:jacoco-maven-plugin:prepare-agent sonar:sonar -P ci
     - stage: CUSTOM_BRANCH_BUILD_TEST
       script: mvn clean verify
+    - stage: MASTER_BUILD_TEST_ANALYSE
+      script: mvn clean verify org.jacoco:jacoco-maven-plugin:prepare-agent sonar:sonar -P ci -Ddockerfile.skip=true

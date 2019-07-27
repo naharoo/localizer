@@ -386,8 +386,9 @@
                         <username>${env.DOCKERHUB_USR}</username>
                         <!--suppress UnresolvedMavenProperty -->
                         <password>${env.DOCKERHUB_PSW}</password>
-                        <useMavenSettingsForAuth>true</useMavenSettingsForAuth>
                         <googleContainerRegistryEnabled>false</googleContainerRegistryEnabled>
+                        <!--suppress UnresolvedMavenProperty -->
+                        <skip>${dockerfile.skip}</skip>
                     </configuration>
                 </plugin>
             </plugins>
