@@ -377,7 +377,7 @@
                         </execution>
                     </executions>
                     <configuration>
-                        <repository>io.docker/localizer/${project.artifactId}</repository>
+                        <repository>naharoo/localizer/${project.artifactId}</repository>
                         <buildArgs>
                             <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
                         </buildArgs>
