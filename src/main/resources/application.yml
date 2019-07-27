@@ -14,9 +14,9 @@ localizer:
       email: info@localizer.com
 spring:
   datasource:
-    url: jdbc:postgresql://thewhitewall.club:5432/localizer
-    username: localizer
-    password: localizer
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
     hikari:
       connection-timeout: 20000
