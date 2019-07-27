@@ -387,6 +387,7 @@
                         <!--suppress UnresolvedMavenProperty -->
                         <password>${env.DOCKERHUB_PSW}</password>
                         <useMavenSettingsForAuth>true</useMavenSettingsForAuth>
+                        <googleContainerRegistryEnabled>false</googleContainerRegistryEnabled>
                     </configuration>
                 </plugin>
             </plugins>
