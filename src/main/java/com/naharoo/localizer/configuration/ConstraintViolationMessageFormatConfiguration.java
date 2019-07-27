@@ -17,7 +17,7 @@ public class ConstraintViolationMessageFormatConfiguration extends DefaultErrorA
 
     private MessageSource messageSource;
 
-    public ConstraintViolationMessageFormatConfiguration(MessageSource messageSource) {
+    public ConstraintViolationMessageFormatConfiguration(final MessageSource messageSource) {
         this.messageSource = messageSource;
     }
 
@@ -29,14 +29,16 @@ public class ConstraintViolationMessageFormatConfiguration extends DefaultErrorA
     }
 
     private void resolveBindingErrors(final Map<String, Object> errorAttributes) {
-        @SuppressWarnings("unchecked") List<ObjectError> errors = (List<ObjectError>) errorAttributes.get("errors");
-        if (errors == null) return;
+        @SuppressWarnings("unchecked") final List<ObjectError> errors = (List<ObjectError>) errorAttributes.get("errors");
+        if (errors == null) {
+            return;
+        }
 
-        List<String> errorMessages = new ArrayList<>();
+        final List<String> errorMessages = new ArrayList<>();
         for (ObjectError error : errors) {
-            String resolved = messageSource.getMessage(error, Locale.US);
+            final String resolved = messageSource.getMessage(error, Locale.US);
             if (error instanceof FieldError) {
-                FieldError fieldError = (FieldError) error;
+                final FieldError fieldError = (FieldError) error;
                 errorMessages.add(fieldError.getField() + " " + resolved + " but value was " + fieldError.getRejectedValue());
             } else {
                 errorMessages.add(resolved);

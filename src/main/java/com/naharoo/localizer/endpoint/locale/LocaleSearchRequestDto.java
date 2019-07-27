@@ -4,25 +4,49 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.naharoo.localizer.domain.SortOrder;
 import com.naharoo.localizer.domain.locale.LocaleSortField;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.validation.constraints.Min;
 
+@ApiModel(description = "Class containing all necessary data for Locale search")
 public class LocaleSearchRequestDto {
 
-    public static final int DEFAULT_FROM = 0;
-    public static final int DEFAULT_SIZE = 20;
-    public static final LocaleSortField DEFAULT_SORT_FIELD = LocaleSortField.ID;
-    public static final SortOrder DEFAULT_SORT_ORDER = SortOrder.ASC;
+    private static final int DEFAULT_FROM = 0;
+    private static final int DEFAULT_SIZE = 20;
+    private static final LocaleSortField DEFAULT_SORT_FIELD = LocaleSortField.ID;
+    private static final SortOrder DEFAULT_SORT_ORDER = SortOrder.ASC;
 
     @Min(0)
+    @ApiModelProperty(
+        notes = "Specifies from which index should sorted Locale list be fetched. Default value 0 will be picked if not provided.",
+        example = "0",
+        position = 0
+    )
     private final Integer from;
 
-    @Min(0)
+    @Min(1)
+    @ApiModelProperty(
+        notes = "Specifies how many Locales should  be fetched. Default value 20 will be picked if not provided.",
+        example = "20",
+        position = 1
+    )
     private final Integer size;
 
+    @ApiModelProperty(
+        notes = "Specifies which Locale field will be used for sorting. Default value ID will be picked if not provided.",
+        example = "20",
+        position = 2
+    )
     private final LocaleSortField sortField;
+
+    @ApiModelProperty(
+        notes = "Specifies in which order Locale should b sorting. Default value ASC will be picked if not provided.",
+        example = "20",
+        position = 2
+    )
     private final SortOrder sortOrder;
 
     @JsonCreator

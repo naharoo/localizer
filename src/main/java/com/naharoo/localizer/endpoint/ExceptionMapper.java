@@ -9,12 +9,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import javax.validation.ConstraintViolationException;
 import java.util.Collections;
 
 @ControllerAdvice
 public class ExceptionMapper {
 
     private static final Logger logger = LoggerFactory.getLogger(ExceptionMapper.class);
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<LocalizerApiError> handleConstraintViolationException(final ConstraintViolationException e) {
+
+        final HttpStatus status = HttpStatus.BAD_REQUEST;
+
+        return new ResponseEntity<>(new LocalizerApiError(
+            status.value(),
+            Collections.singletonList(e.getMessage())
+        ), status);
+    }
 
     @ExceptionHandler(ResourceAlreadyExistsException.class)
     public ResponseEntity<LocalizerApiError> handleResourceAlreadyExistsException(final ResourceAlreadyExistsException e) {

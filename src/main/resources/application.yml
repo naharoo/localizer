@@ -2,6 +2,16 @@ localizer:
   api:
     port: 8080
     context-path: rest
+    version: @project.version@
+  swagger:
+    title: Localizer Rest API
+    description: Description of API calls and their parameters
+    baseControllerPackage: com.naharoo.localizer.endpoint
+    pathSelectorsRegex: /.*
+    contact:
+      name: Localizer
+      url: https://www.localizer.com
+      email: info@localizer.com
 spring:
   datasource:
     url: jdbc:postgresql://thewhitewall.club:5432/localizer

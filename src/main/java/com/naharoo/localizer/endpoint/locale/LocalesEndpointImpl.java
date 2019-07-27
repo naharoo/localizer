@@ -30,16 +30,16 @@ public class LocalesEndpointImpl implements LocalesEndpoint {
     }
 
     @Override
-    public LocaleDto create(final LocaleCreationRequestDto modificationRequestDto) {
-        expectNotNull(modificationRequestDto, "modificationRequestDto cannot be null.");
-        final String key = modificationRequestDto.getKey();
-        expectNotEmpty(key, "modificationRequestDto.key cannot be empty.");
-        final String name = modificationRequestDto.getName();
-        expectNotEmpty(name, "modificationRequestDto.name cannot be empty.");
+    public LocaleDto create(final LocaleCreationRequestDto creationRequestDto) {
+        expectNotNull(creationRequestDto, "creationRequestDto cannot be null.");
+        final String key = creationRequestDto.getKey();
+        expectNotEmpty(key, "creationRequestDto.key cannot be empty.");
+        final String name = creationRequestDto.getName();
+        expectNotEmpty(name, "creationRequestDto.name cannot be empty.");
 
         logger.debug("Creating Locale [key:'{}', name:'{}']...", key, name);
 
-        final LocaleCreationRequest request = mapper.map(modificationRequestDto, LocaleCreationRequest.class);
+        final LocaleCreationRequest request = mapper.map(creationRequestDto, LocaleCreationRequest.class);
         final Locale locale = localeService.create(request);
         final LocaleDto createdLocale = mapper.map(locale, LocaleDto.class);
 
@@ -61,13 +61,13 @@ public class LocalesEndpointImpl implements LocalesEndpoint {
     }
 
     @Override
-    public GenericListResponse<LocaleDto> search(final LocaleSearchRequestDto requestDto) {
-        expectNotNull(requestDto, "requestDto cannot be null.");
+    public GenericListResponse<LocaleDto> search(final LocaleSearchRequestDto searchRequestDto) {
+        expectNotNull(searchRequestDto, "searchRequestDto cannot be null.");
 
         logger.debug("Searching for Locales...");
         final StopWatch stopwatch = StopWatch.createStarted();
 
-        final LocaleSearchRequest request = mapper.map(requestDto, LocaleSearchRequest.class);
+        final LocaleSearchRequest request = mapper.map(searchRequestDto, LocaleSearchRequest.class);
         final GenericListResponse<Locale> locales = localeService.search(request);
         final GenericListResponse<LocaleDto> response = new GenericListResponse<>(
             mapper.mapAsList(locales.getItems(), LocaleDto.class),
