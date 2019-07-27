@@ -75,7 +75,7 @@ public class LocalesEndpointImpl implements LocalesEndpoint {
         );
 
         stopwatch.stop();
-        logger.debug(
+        logger.info(
             "Done searching for {} of total {} Locales in {}ms.",
             response.getItems().size(),
             response.getTotalItems(),

@@ -46,3 +46,5 @@ spring:
     enabled: true
     baseline-on-migrate: true
     locations: classpath:db/migration
+logging:
+  config: classpath:logback-default.xml

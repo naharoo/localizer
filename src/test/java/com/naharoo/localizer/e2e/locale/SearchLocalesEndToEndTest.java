@@ -1,9 +1,11 @@
 package com.naharoo.localizer.e2e.locale;
 
 import com.naharoo.localizer.e2e.AbstractEndToEndTest;
+import com.naharoo.localizer.testutils.json.JsonWrapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -22,22 +24,25 @@ class SearchLocalesEndToEndTest extends AbstractEndToEndTest {
     @Autowired
     MockMvc mockMvc;
 
+    @Value("com/naharoo/localizer/e2e/json/locale/LocaleSearchRequest.json")
+    JsonWrapper searchRequest;
+
     @Test
     @DisplayName("SearchLocales should return all not deleted Locales in DB when search request is empty json object")
-    void search_200_emptyRequestObject() throws Exception {
+    void search_200() throws Exception {
         // Given
         final String json = "{}";
         final List<LocaleTestData> expectedLocales = LocaleEndToEndTestHelper.getInitialData()
             .stream()
             .filter(localeTestData -> !localeTestData.isDeleted())
-            .sorted(Comparator.comparing(LocaleTestData::getId))
+            .sorted(Comparator.comparing(LocaleTestData::getKey).reversed())
             .collect(Collectors.toList());
 
         // When
         final ResultActions result = mockMvc
             .perform(
                 post("/locales/search")
-                    .content(json)
+                    .content(searchRequest.getJson())
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
                     .accept(MediaType.APPLICATION_JSON_UTF8)
             );

@@ -20,7 +20,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class GetLocalesEndpointTest extends AbstractEndpointTest {
+class SearchLocalesEndpointTest extends AbstractEndpointTest {
 
     @Mock
     LocaleService service;
@@ -39,7 +39,7 @@ class GetLocalesEndpointTest extends AbstractEndpointTest {
     @ParameterizedTest(name = "Input: {arguments}")
     @NullSource
     @DisplayName("GetLocales should throw IllegalArgumentException when input is invalid")
-    void getLocales_illegalArgs(final LocaleSearchRequestDto requestDto) {
+    void searchLocales_illegalArgs(final LocaleSearchRequestDto requestDto) {
         // Given
         // Illegal LocaleGetRequestDto
 
@@ -52,7 +52,7 @@ class GetLocalesEndpointTest extends AbstractEndpointTest {
 
     @Test
     @DisplayName("GetLocales should return proper data when input is correct")
-    void getLocales_normalCase() {
+    void searchLocales_normalCase() {
         // Given
         final LocaleSearchRequestDto requestDto = LocaleTestHelper.createRandomLocaleSearchRequestDto();
 
