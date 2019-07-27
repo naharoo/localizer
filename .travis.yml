@@ -14,9 +14,13 @@ addons:
 script: if [ $TRAVIS_BRANCH == "master"]; then ; fi
 jobs:
   include:
-    - stage: MASTER_BUILD_ANALYSE_DEPLOY
+    - stage: MASTER_BUILD_TEST_ANALYSE_DEPLOY
       script: mvn clean deploy org.jacoco:jacoco-maven-plugin:prepare-agent sonar:sonar -P ci
+    - stage: CUSTOM_BRANCH_BUILD_TEST
+      script: mvn clean verify
 
 stages:
-  - name: MASTER_BUILD_ANALYSE_DEPLOY
+  - name: MASTER_BUILD_TEST_ANALYSE_DEPLOY
     if: branch = master
+  - name: CUSTOM_BRANCH_BUILD_TEST
+    if: branch != master
