@@ -212,6 +212,61 @@ class LocaleServiceImplTest {
         assertThat(actualLocale)
             .isNotNull()
             .isEqualTo(locale);
+        verify(spy).findById(id);
+    }
+
+    @ParameterizedTest(name = "Input: {arguments}")
+    @EmptyStringSource
+    @DisplayName("GetByKey should throw IllegalArgumentException when input is not valid")
+    void getByKey_illegalArgs(final String key) {
+        // Given
+        // Blank key
+
+        // When
+        assertThrows(IllegalArgumentException.class, () -> service.getByKey(key));
+
+        // Then
+        // IllegalArgumentException is thrown
+    }
+
+    @Test
+    @DisplayName("GetByKey should throw ResourceNotFoundException when Locale with key is not found")
+    void getByKey_resourceNotFoundException() {
+        // Given
+        final String key = UUID.randomUUID().toString();
+
+        final LocaleServiceImpl spy = spy(new LocaleServiceImpl(repository));
+
+        when(spy.findByKey(key))
+            .thenReturn(Optional.empty());
+
+        // When
+        assertThrows(ResourceNotFoundException.class, () -> service.getByKey(key));
+
+        // Then
+        verify(spy).findByKey(key);
+    }
+
+    @Test
+    @DisplayName("GetByKey should return proper Locale when it is found by key")
+    void getByKey_normalCase() {
+        // Given
+        final Locale locale = LocaleTestHelper.createRandomLocale();
+        final String key = locale.getId();
+
+        final LocaleServiceImpl spy = spy(new LocaleServiceImpl(repository));
+
+        when(spy.findByKey(key))
+            .thenReturn(Optional.of(locale));
+
+        // When
+        final Locale actualLocale = service.getByKey(key);
+
+        // Then
+        assertThat(actualLocale)
+            .isNotNull()
+            .isEqualTo(locale);
+        verify(spy).findByKey(key);
     }
 
     @ParameterizedTest(name = "Input: {arguments}")
@@ -244,6 +299,7 @@ class LocaleServiceImplTest {
         assertThat(localeOpt)
             .isNotNull()
             .isEmpty();
+        verify(repository).findByIdAndDeletedIsNull(id);
     }
 
     @ParameterizedTest(name = "Input: {arguments}")

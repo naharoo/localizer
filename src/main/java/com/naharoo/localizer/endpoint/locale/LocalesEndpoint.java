@@ -61,7 +61,28 @@ public interface LocalesEndpoint {
     })
     @GetMapping("/id/{id}")
     @ResponseStatus(HttpStatus.OK)
-    LocaleDto getById(@NotBlank @PathVariable(value = "id", required = false) final String id);
+    LocaleDto getById(@NotBlank @PathVariable(value = "id", required = false) String id);
+
+    @ApiOperation(
+        value = "Get a Locale by key",
+        notes = "Gets a Locale using provided key",
+        response = LocaleDto.class
+    )
+    @ApiResponses({
+        @ApiResponse(
+            code = 200,
+            message = "Successfully got a Locale",
+            response = LocaleDto.class
+        ),
+        @ApiResponse(
+            code = 404,
+            message = "No Locale has been found for provided key",
+            response = LocalizerApiError.class
+        )
+    })
+    @GetMapping("/key/{key}")
+    @ResponseStatus(HttpStatus.OK)
+    LocaleDto getByKey(@NotBlank @PathVariable(value = "key", required = false) String key);
 
     @ApiOperation(
         value = "Searches for Locales list",
