@@ -33,15 +33,13 @@
         </rollingPolicy>
     </appender>
 
-    <!-- LOG everything at INFO level -->
-    <root level="info">
-        <appender-ref ref="RollingFile"/>
+    <!-- LOG "springframework*" at TRACE level -->
+    <logger name="org.springframework" level="info" additivity="false">
         <appender-ref ref="Console"/>
-    </root>
+    </logger>
 
     <!-- LOG "com.naharoo.localizer*" at TRACE level -->
     <logger name="com.naharoo.localizer" level="trace" additivity="false">
-        <appender-ref ref="RollingFile"/>
         <appender-ref ref="Console"/>
     </logger>
 

@@ -20,4 +20,6 @@ public interface LocaleService {
     Optional<Locale> findById(String id);
 
     GenericListResponse<Locale> search(LocaleSearchRequest searchRequest);
+
+    Locale delete(String id);
 }

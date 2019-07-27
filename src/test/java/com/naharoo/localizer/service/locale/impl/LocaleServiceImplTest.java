@@ -22,6 +22,7 @@ import org.mockito.Mock;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -352,5 +353,49 @@ class LocaleServiceImplTest {
         assertEquals(expectedTotalItems, actualTotalItems);
 
         verify(repository).search(pageRequest);
+    }
+
+    @ParameterizedTest(name = "Input: {arguments}")
+    @EmptyStringSource
+    @DisplayName("Delete should throw IllegalArgumentException when input is not valid")
+    void delete_illegalArgs(final String id) {
+        // Given
+        // Blank id
+
+        // When
+        assertThrows(IllegalArgumentException.class, () -> service.delete(id));
+
+        // Then
+        // IllegalArgumentException is thrown
+    }
+
+    @Test
+    @DisplayName("Delete should return proper Locale when it is found by id")
+    void delete_normalCase() {
+        // Given
+        final Locale locale = LocaleTestHelper.createRandomLocale();
+        final String id = locale.getId();
+
+        final LocaleServiceImpl spy = spy(new LocaleServiceImpl(repository));
+
+        doReturn(locale)
+            .when(spy).getById(id);
+        doAnswer(invocation -> invocation.getArgument(0))
+            .when(repository).save(any(Locale.class));
+
+        // When
+        final Locale actualLocale = spy.delete(id);
+
+        // Then
+        assertThat(actualLocale)
+            .isNotNull()
+            .isEqualToIgnoringGivenFields(locale, "updated", "deleted");
+        final LocalDateTime updated = actualLocale.getUpdated();
+        assertNotNull(updated);
+        final LocalDateTime deleted = actualLocale.getDeleted();
+        assertNotNull(deleted);
+        assertEquals(updated, deleted);
+        verify(spy).getById(id);
+        verify(repository).save(any(Locale.class));
     }
 }

@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -15,6 +16,8 @@ import javax.validation.constraints.NotNull;
 
 @Api(tags = "Locales", description = "Locales & relative endpoints")
 @RequestMapping(value = "/locales")
+@RestController
+@Validated
 public interface LocalesEndpoint {
 
     @ApiOperation(
@@ -104,4 +107,30 @@ public interface LocalesEndpoint {
     @PostMapping("/search")
     @ResponseStatus(HttpStatus.OK)
     GenericListResponse<LocaleDto> search(@NotNull @Valid @RequestBody LocaleSearchRequestDto searchRequestDto);
+
+    @ApiOperation(
+        value = "Delete a Locale by id",
+        notes = "Deletes a Locale using provided id",
+        response = LocaleDto.class
+    )
+    @ApiResponses({
+        @ApiResponse(
+            code = 200,
+            message = "Successfully deleted a Locale",
+            response = LocaleDto.class
+        ),
+        @ApiResponse(
+            code = 404,
+            message = "No Locale has been found for provided id",
+            response = LocalizerApiError.class
+        ),
+        @ApiResponse(
+            code = 400,
+            message = "Request data violates some constraints",
+            response = LocalizerApiError.class
+        )
+    })
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    LocaleDto delete(@NotBlank @PathVariable(value = "id", required = false) String id);
 }

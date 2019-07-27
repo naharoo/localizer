@@ -37,14 +37,14 @@ public class LocaleSearchRequestDto {
 
     @ApiModelProperty(
         notes = "Specifies which Locale field will be used for sorting. Default value ID will be picked if not provided.",
-        example = "20",
+        example = "ID",
         position = 2
     )
     private final LocaleSortField sortField;
 
     @ApiModelProperty(
         notes = "Specifies in which order Locale should b sorting. Default value ASC will be picked if not provided.",
-        example = "20",
+        example = "ASC",
         position = 2
     )
     private final SortOrder sortOrder;

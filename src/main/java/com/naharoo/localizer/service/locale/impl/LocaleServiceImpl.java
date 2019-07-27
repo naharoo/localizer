@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static com.naharoo.localizer.utils.Assertions.expectNotEmpty;
@@ -154,6 +155,23 @@ public class LocaleServiceImpl implements LocaleService {
             result.getTotalItems()
         );
         return result;
+    }
+
+    @Transactional
+    @Override
+    public Locale delete(final String id) {
+        expectNotEmpty(id, "id cannot be empty.");
+        logger.trace("Deleting Locale by id:'{}'...", id);
+
+        final Locale existingLocale = getById(id);
+        final LocalDateTime currentDateTime = LocalDateTime.now();
+        existingLocale.setUpdated(currentDateTime);
+        existingLocale.setDeleted(currentDateTime);
+
+        final Locale modifiedLocale = localeRepository.save(existingLocale);
+
+        logger.debug("Done deleting Locale by id:'{}'.", id);
+        return modifiedLocale;
     }
 
 }
