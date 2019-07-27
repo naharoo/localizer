@@ -61,6 +61,27 @@ public class LocaleServiceImpl implements LocaleService {
 
     @Transactional(readOnly = true)
     @Override
+    public Locale getByKey(final String key) {
+        expectNotEmpty(key, "key cannot be empty.");
+        logger.trace("Getting Locale by key:'{}'...", key);
+
+        final Optional<Locale> localeOpt = findByKey(key);
+        if (localeOpt.isEmpty()) {
+            logger.warn("No Locale has been found with key '{}'.", key);
+            throw ResourceNotFoundException.with(
+                Locale.class,
+                "key",
+                key
+            );
+        }
+        final Locale result = localeOpt.get();
+
+        logger.debug("Done getting Locale by key:'{}'.", key);
+        return result;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
     public Optional<Locale> findByKey(final String key) {
         expectNotEmpty(key, "key cannot be empty.");
 

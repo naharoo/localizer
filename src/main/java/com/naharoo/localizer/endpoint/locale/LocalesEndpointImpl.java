@@ -61,6 +61,19 @@ public class LocalesEndpointImpl implements LocalesEndpoint {
     }
 
     @Override
+    public LocaleDto getByKey(final String key) {
+        expectNotEmpty(key, "key cannot be empty.");
+
+        logger.debug("Getting Locale by key:'{}'...", key);
+
+        final Locale locale = localeService.getByKey(key);
+        final LocaleDto result = mapper.map(locale, LocaleDto.class);
+
+        logger.info("Getting Locale by key:'{}'.", key);
+        return result;
+    }
+
+    @Override
     public GenericListResponse<LocaleDto> search(final LocaleSearchRequestDto searchRequestDto) {
         expectNotNull(searchRequestDto, "searchRequestDto cannot be null.");
 

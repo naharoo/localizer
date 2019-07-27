@@ -14,7 +14,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class GetLocaleEndToEndTest extends AbstractEndToEndTest {
+class GetLocaleByIdEndToEndTest extends AbstractEndToEndTest {
 
     @Autowired
     MockMvc mockMvc;
