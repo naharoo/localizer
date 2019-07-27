@@ -289,6 +289,7 @@
                             <version>${maven.surefire.plugin.version}</version>
                             <configuration>
                                 <groups>unit, e2e, endpoint, mapper</groups>
+                                <!--suppress UnresolvedMavenProperty -->
                                 <argLine>${jacoco.surefire.argLine} --illegal-access=permit</argLine>
                             </configuration>
                         </plugin>
@@ -381,6 +382,10 @@
                             <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
                         </buildArgs>
                         <tag>${project.version}</tag>
+                        <!--suppress UnresolvedMavenProperty -->
+                        <username>${env.DOCKERHUB_USR}</username>
+                        <!--suppress UnresolvedMavenProperty -->
+                        <password>${env.DOCKERHUB_PSW}</password>
                         <useMavenSettingsForAuth>true</useMavenSettingsForAuth>
                     </configuration>
                 </plugin>
