@@ -1,7 +1,7 @@
 package com.naharoo.localizer.endpoint.locale;
 
 import com.naharoo.localizer.domain.GenericListResponse;
-import com.naharoo.localizer.endpoint.LocalizerApiError;
+import com.naharoo.localizer.endpoint.LocalizerApiErrorDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -33,12 +33,12 @@ public interface LocalesEndpoint {
         @ApiResponse(
             code = 409,
             message = "Another locale with same key already exists",
-            response = LocalizerApiError.class
+            response = LocalizerApiErrorDto.class
         ),
         @ApiResponse(
             code = 400,
             message = "Request data violates some constraints",
-            response = LocalizerApiError.class
+            response = LocalizerApiErrorDto.class
         )
     })
     @PostMapping
@@ -59,7 +59,7 @@ public interface LocalesEndpoint {
         @ApiResponse(
             code = 404,
             message = "No Locale has been found for provided id",
-            response = LocalizerApiError.class
+            response = LocalizerApiErrorDto.class
         )
     })
     @GetMapping("/id/{id}")
@@ -80,7 +80,7 @@ public interface LocalesEndpoint {
         @ApiResponse(
             code = 404,
             message = "No Locale has been found for provided key",
-            response = LocalizerApiError.class
+            response = LocalizerApiErrorDto.class
         )
     })
     @GetMapping("/key/{key}")
@@ -101,7 +101,7 @@ public interface LocalesEndpoint {
         @ApiResponse(
             code = 400,
             message = "Request data violates some constraints",
-            response = LocalizerApiError.class
+            response = LocalizerApiErrorDto.class
         )
     })
     @PostMapping("/search")
@@ -122,12 +122,12 @@ public interface LocalesEndpoint {
         @ApiResponse(
             code = 404,
             message = "No Locale has been found for provided id",
-            response = LocalizerApiError.class
+            response = LocalizerApiErrorDto.class
         ),
         @ApiResponse(
             code = 400,
             message = "Request data violates some constraints",
-            response = LocalizerApiError.class
+            response = LocalizerApiErrorDto.class
         )
     })
     @DeleteMapping("/{id}")
@@ -148,12 +148,12 @@ public interface LocalesEndpoint {
         @ApiResponse(
             code = 404,
             message = "No Locale has been found for provided id",
-            response = LocalizerApiError.class
+            response = LocalizerApiErrorDto.class
         ),
         @ApiResponse(
             code = 400,
             message = "Request data violates some constraints",
-            response = LocalizerApiError.class
+            response = LocalizerApiErrorDto.class
         )
     })
     @PutMapping

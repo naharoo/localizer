@@ -18,41 +18,41 @@ public class ExceptionMapper {
     private static final Logger logger = LoggerFactory.getLogger(ExceptionMapper.class);
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<LocalizerApiError> handleConstraintViolationException(final ConstraintViolationException e) {
+    public ResponseEntity<LocalizerApiErrorDto> handleConstraintViolationException(final ConstraintViolationException e) {
 
         final HttpStatus status = HttpStatus.BAD_REQUEST;
 
-        return new ResponseEntity<>(new LocalizerApiError(
+        return new ResponseEntity<>(new LocalizerApiErrorDto(
             status.value(),
             Collections.singletonList(e.getMessage())
         ), status);
     }
 
     @ExceptionHandler(ResourceAlreadyExistsException.class)
-    public ResponseEntity<LocalizerApiError> handleResourceAlreadyExistsException(final ResourceAlreadyExistsException e) {
+    public ResponseEntity<LocalizerApiErrorDto> handleResourceAlreadyExistsException(final ResourceAlreadyExistsException e) {
         logger.debug("Handling ResourceAlreadyExistsException...", e);
 
         final HttpStatus status = HttpStatus.CONFLICT;
-        final LocalizerApiError localizerApiError = new LocalizerApiError(
+        final LocalizerApiErrorDto localizerApiErrorDto = new LocalizerApiErrorDto(
             status.value(),
             Collections.singletonList(e.getMessage())
         );
 
         logger.info("Done handling ResourceAlreadyExistsException.", e);
-        return new ResponseEntity<>(localizerApiError, status);
+        return new ResponseEntity<>(localizerApiErrorDto, status);
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<LocalizerApiError> handleResourceNotFoundException(final ResourceNotFoundException e) {
+    public ResponseEntity<LocalizerApiErrorDto> handleResourceNotFoundException(final ResourceNotFoundException e) {
         logger.debug("Handling ResourceNotFoundException...", e);
 
         final HttpStatus status = HttpStatus.NOT_FOUND;
-        final LocalizerApiError localizerApiError = new LocalizerApiError(
+        final LocalizerApiErrorDto localizerApiErrorDto = new LocalizerApiErrorDto(
             status.value(),
             Collections.singletonList(e.getMessage())
         );
 
         logger.info("Done handling ResourceNotFoundException.", e);
-        return new ResponseEntity<>(localizerApiError, status);
+        return new ResponseEntity<>(localizerApiErrorDto, status);
     }
 }

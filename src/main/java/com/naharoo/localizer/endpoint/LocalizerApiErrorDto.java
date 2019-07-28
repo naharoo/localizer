@@ -10,7 +10,7 @@ import java.util.List;
 
 @Data
 @ApiModel(description = "Class representing Localizer Api Errors and containing their data")
-public final class LocalizerApiError {
+public final class LocalizerApiErrorDto {
 
     @ApiModelProperty(
         notes = "HTTP Status of response.",
@@ -29,7 +29,7 @@ public final class LocalizerApiError {
     private final List<String> messages;
 
     @JsonCreator
-    public LocalizerApiError(
+    public LocalizerApiErrorDto(
         @JsonProperty("status") final int status,
         @JsonProperty("messages") final List<String> messages
     ) {
