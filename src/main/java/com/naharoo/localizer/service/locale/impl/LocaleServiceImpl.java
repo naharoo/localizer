@@ -195,7 +195,7 @@ public class LocaleServiceImpl implements LocaleService {
 
         final Locale updatedLocale = localeRepository.save(locale);
 
-        logger.debug("Done updating Locale:'{}' with properties: [key: '{}', name: '{}']...", id, key, name);
+        logger.debug("Done updating Locale:'{}' with properties: [key: '{}', name: '{}'].", id, key, name);
         return updatedLocale;
     }
 

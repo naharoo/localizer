@@ -130,7 +130,7 @@ public class LocalesEndpointImpl implements LocalesEndpoint {
         final Locale updatedLocale = localeService.update(modificationRequest);
         final LocaleDto result = mapper.map(updatedLocale, LocaleDto.class);
 
-        logger.info("Done updating Locale:'{}' with [{}] details.", id, modificationRequestDto);
+        logger.info("Done updating Locale:'{}' with ['{}'] details.", id, modificationRequestDto);
         return result;
     }
 }
