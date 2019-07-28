@@ -4,12 +4,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import lombok.Data;
 
 import java.util.List;
 
+@Data
 @ApiModel(description = "Class representing Localizer Api Errors and containing their data")
 public final class LocalizerApiError {
 
@@ -36,43 +35,5 @@ public final class LocalizerApiError {
     ) {
         this.status = status;
         this.messages = messages;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public List<String> getMessages() {
-        return messages;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        if (this == object) return true;
-
-        if (object == null || getClass() != object.getClass()) return false;
-
-        LocalizerApiError that = (LocalizerApiError) object;
-
-        return new EqualsBuilder()
-            .append(status, that.status)
-            .append(messages, that.messages)
-            .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-            .append(status)
-            .append(messages)
-            .toHashCode();
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-            .append("status", status)
-            .append("messages", messages)
-            .toString();
     }
 }

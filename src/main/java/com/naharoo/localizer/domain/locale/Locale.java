@@ -1,15 +1,16 @@
 package com.naharoo.localizer.domain.locale;
 
 import com.naharoo.localizer.domain.Domain;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Data
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "l_locale",
     uniqueConstraints = {
@@ -43,68 +44,5 @@ public class Locale extends Domain {
     public Locale(final String key, final String name) {
         this.key = key;
         this.name = name;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public LocalDateTime getDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(LocalDateTime deleted) {
-        this.deleted = deleted;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        Locale locale = (Locale) o;
-
-        return new EqualsBuilder()
-            .appendSuper(super.equals(o))
-            .append(key, locale.key)
-            .append(name, locale.name)
-            .append(deleted, locale.deleted)
-            .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-            .appendSuper(super.hashCode())
-            .append(key)
-            .append(name)
-            .append(deleted)
-            .toHashCode();
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-            .append("key", key)
-            .append("name", name)
-            .append("deleted", deleted)
-            .toString();
     }
 }

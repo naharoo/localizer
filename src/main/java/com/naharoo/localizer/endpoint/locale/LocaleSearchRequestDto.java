@@ -6,11 +6,11 @@ import com.naharoo.localizer.domain.SortOrder;
 import com.naharoo.localizer.domain.locale.LocaleSortField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import lombok.Data;
 
 import javax.validation.constraints.Min;
 
+@Data
 @ApiModel(description = "Class containing all necessary data for Locale search")
 public class LocaleSearchRequestDto {
 
@@ -60,47 +60,5 @@ public class LocaleSearchRequestDto {
         this.size = size == null ? DEFAULT_SIZE : size;
         this.sortField = sortField == null ? DEFAULT_SORT_FIELD : sortField;
         this.sortOrder = sortOrder == null ? DEFAULT_SORT_ORDER : sortOrder;
-    }
-
-    public Integer getFrom() {
-        return from;
-    }
-
-    public Integer getSize() {
-        return size;
-    }
-
-    public LocaleSortField getSortField() {
-        return sortField;
-    }
-
-    public SortOrder getSortOrder() {
-        return sortOrder;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass()) return false;
-
-        LocaleSearchRequestDto that = (LocaleSearchRequestDto) o;
-
-        return new EqualsBuilder()
-            .append(from, that.from)
-            .append(size, that.size)
-            .append(sortField, that.sortField)
-            .append(sortOrder, that.sortOrder)
-            .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-            .append(from)
-            .append(size)
-            .append(sortField)
-            .append(sortOrder)
-            .toHashCode();
     }
 }
