@@ -1,46 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+    <!-- LOG_FILE is the property that Spring Boot uses for default logging support -->
+    <!-- It should be placed before inclusion of the base.xml, so that the LOG_FILE value overrides existing value -->
+    <property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}/internal-api.log}"/>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
 
-    <property name="LOGS" value="./logs"/>
-    <property name="appName" value="localizer"/>
-
-    <appender name="Console"
-              class="ch.qos.logback.core.ConsoleAppender">
-        <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>
-                %black(%d{ISO8601}) %highlight(%-5level) [%blue(%t)] %yellow(%C{1.}): %msg%n%throwable
-            </Pattern>
-        </layout>
-    </appender>
-
-    <appender name="RollingFile"
-              class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOGS}/${appName}.log</file>
-        <encoder
-            class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
-        </encoder>
-
-        <rollingPolicy
-            class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- rollover daily and when the file reaches 10 MegaBytes -->
-            <fileNamePattern>${LOGS}/archived/${appName}-%d{yyyy-MM-dd}.%i.log
-            </fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy
-                class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>10MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
-        </rollingPolicy>
-    </appender>
-
-    <!-- LOG "springframework*" at TRACE level -->
-    <logger name="org.springframework" level="info" additivity="false">
-        <appender-ref ref="Console"/>
-    </logger>
-
-    <!-- LOG "com.naharoo.localizer*" at TRACE level -->
-    <logger name="com.naharoo.localizer" level="trace" additivity="false">
-        <appender-ref ref="Console"/>
-    </logger>
-
+    <logger name="org.springframework.web" level="INFO"/>
+    <logger name="com.naharoo.localizer" level="TRACE"/>
 </configuration>

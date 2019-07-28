@@ -38,10 +38,12 @@ public class Locale extends Domain {
     private LocalDateTime deleted;
 
     public Locale() {
-        super();
+        super(null, null, null);
+
     }
 
     public Locale(final String key, final String name) {
+        super(null, null, null);
         this.key = key;
         this.name = name;
     }
