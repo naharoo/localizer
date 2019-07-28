@@ -133,4 +133,30 @@ public interface LocalesEndpoint {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     LocaleDto delete(@NotBlank @PathVariable(value = "id", required = false) String id);
+
+    @ApiOperation(
+        value = "Update a Locale",
+        notes = "Updates a Locale identified with provided id by provided data",
+        response = LocaleDto.class
+    )
+    @ApiResponses({
+        @ApiResponse(
+            code = 200,
+            message = "Successfully updated a Locale",
+            response = LocaleDto.class
+        ),
+        @ApiResponse(
+            code = 404,
+            message = "No Locale has been found for provided id",
+            response = LocalizerApiError.class
+        ),
+        @ApiResponse(
+            code = 400,
+            message = "Request data violates some constraints",
+            response = LocalizerApiError.class
+        )
+    })
+    @PutMapping
+    @ResponseStatus(HttpStatus.OK)
+    LocaleDto update(@NotNull @Valid @RequestBody LocaleModificationRequestDto modificationRequestDto);
 }

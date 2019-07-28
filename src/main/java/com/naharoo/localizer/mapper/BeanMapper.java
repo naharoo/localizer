@@ -2,9 +2,11 @@ package com.naharoo.localizer.mapper;
 
 import com.naharoo.localizer.domain.locale.Locale;
 import com.naharoo.localizer.domain.locale.LocaleCreationRequest;
+import com.naharoo.localizer.domain.locale.LocaleModificationRequest;
 import com.naharoo.localizer.domain.locale.LocaleSearchRequest;
-import com.naharoo.localizer.endpoint.locale.LocaleDto;
 import com.naharoo.localizer.endpoint.locale.LocaleCreationRequestDto;
+import com.naharoo.localizer.endpoint.locale.LocaleDto;
+import com.naharoo.localizer.endpoint.locale.LocaleModificationRequestDto;
 import com.naharoo.localizer.endpoint.locale.LocaleSearchRequestDto;
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.converter.ConverterFactory;
@@ -42,6 +44,11 @@ public class BeanMapper extends ConfigurableMapper {
 
         factory.classMap(LocaleSearchRequest.class, LocaleSearchRequestDto.class)
             .constructorB("from", "size", "sortField", "sortOrder")
+            .byDefault()
+            .register();
+
+        factory.classMap(LocaleModificationRequest.class, LocaleModificationRequestDto.class)
+            .constructorB("id", "key", "name")
             .byDefault()
             .register();
     }

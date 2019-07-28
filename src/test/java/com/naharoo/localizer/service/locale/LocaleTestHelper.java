@@ -1,12 +1,10 @@
 package com.naharoo.localizer.service.locale;
 
 import com.naharoo.localizer.domain.SortOrder;
-import com.naharoo.localizer.domain.locale.Locale;
-import com.naharoo.localizer.domain.locale.LocaleCreationRequest;
-import com.naharoo.localizer.domain.locale.LocaleSearchRequest;
-import com.naharoo.localizer.domain.locale.LocaleSortField;
+import com.naharoo.localizer.domain.locale.*;
 import com.naharoo.localizer.endpoint.locale.LocaleCreationRequestDto;
 import com.naharoo.localizer.endpoint.locale.LocaleDto;
+import com.naharoo.localizer.endpoint.locale.LocaleModificationRequestDto;
 import com.naharoo.localizer.endpoint.locale.LocaleSearchRequestDto;
 
 import java.security.SecureRandom;
@@ -133,5 +131,37 @@ public final class LocaleTestHelper {
         final Class<LocaleSortField> clazz = LocaleSortField.class;
         int x = new SecureRandom().nextInt(clazz.getEnumConstants().length);
         return clazz.getEnumConstants()[x];
+    }
+
+    public static LocaleModificationRequestDto createRandomLocaleModificationRequestDto() {
+        return createLocaleModificationRequestDto(
+            UUID.randomUUID().toString(),
+            UUID.randomUUID().toString(),
+            UUID.randomUUID().toString()
+        );
+    }
+
+    public static LocaleModificationRequestDto createLocaleModificationRequestDto(
+        final String id,
+        final String key,
+        final String name
+    ) {
+        return new LocaleModificationRequestDto(id, key, name);
+    }
+
+    public static LocaleModificationRequest createRandomLocaleModificationRequest() {
+        return createLocaleModificationRequest(
+            UUID.randomUUID().toString(),
+            UUID.randomUUID().toString(),
+            UUID.randomUUID().toString()
+        );
+    }
+
+    public static LocaleModificationRequest createLocaleModificationRequest(
+        final String id,
+        final String key,
+        final String name
+    ) {
+        return new LocaleModificationRequest(id, key, name);
     }
 }

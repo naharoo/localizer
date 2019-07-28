@@ -3,6 +3,7 @@ package com.naharoo.localizer.service.locale;
 import com.naharoo.localizer.domain.GenericListResponse;
 import com.naharoo.localizer.domain.locale.Locale;
 import com.naharoo.localizer.domain.locale.LocaleCreationRequest;
+import com.naharoo.localizer.domain.locale.LocaleModificationRequest;
 import com.naharoo.localizer.domain.locale.LocaleSearchRequest;
 
 import java.util.Optional;
@@ -22,4 +23,6 @@ public interface LocaleService {
     GenericListResponse<Locale> search(LocaleSearchRequest searchRequest);
 
     Locale delete(String id);
+
+    Locale update(LocaleModificationRequest modificationRequest);
 }

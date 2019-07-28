@@ -3,6 +3,7 @@ package com.naharoo.localizer.endpoint.locale;
 import com.naharoo.localizer.domain.GenericListResponse;
 import com.naharoo.localizer.domain.locale.Locale;
 import com.naharoo.localizer.domain.locale.LocaleCreationRequest;
+import com.naharoo.localizer.domain.locale.LocaleModificationRequest;
 import com.naharoo.localizer.domain.locale.LocaleSearchRequest;
 import com.naharoo.localizer.mapper.BeanMapper;
 import com.naharoo.localizer.service.locale.LocaleService;
@@ -111,6 +112,25 @@ public class LocalesEndpointImpl implements LocalesEndpoint {
         final LocaleDto result = mapper.map(locale, LocaleDto.class);
 
         logger.info("Done deleting Locale by id:'{}'.", id);
+        return result;
+    }
+
+    @Transactional
+    @Override
+    public LocaleDto update(final LocaleModificationRequestDto modificationRequestDto) {
+        expectNotNull(modificationRequestDto, "modificationRequestDto cannot be null.");
+        final String id = modificationRequestDto.getId();
+        expectNotEmpty(id, "modificationRequestDto.id cannot be empty.");
+        expectNotEmpty(modificationRequestDto.getKey(), "modificationRequestDto.key cannot be empty.");
+        expectNotEmpty(modificationRequestDto.getName(), "modificationRequestDto.name cannot be empty.");
+
+        logger.debug("Updating Locale:'{}' with ['{}'] details...", id, modificationRequestDto);
+
+        final LocaleModificationRequest modificationRequest = mapper.map(modificationRequestDto, LocaleModificationRequest.class);
+        final Locale updatedLocale = localeService.update(modificationRequest);
+        final LocaleDto result = mapper.map(updatedLocale, LocaleDto.class);
+
+        logger.info("Done updating Locale:'{}' with ['{}'] details.", id, modificationRequestDto);
         return result;
     }
 }
