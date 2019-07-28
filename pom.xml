@@ -50,7 +50,11 @@
         <dockerfile-maven-version>1.4.10</dockerfile-maven-version>
 
         <sonar.exclusions>
-            src/main/java/com/naharoo/localizer/domain/**/*,src/main/java/com/naharoo/localizer/configuration/**/*,src/main/java/com/naharoo/localizer/exception/**/*,**/*Dto.java,src/main/java/com/naharoo/localizer/Localizer.java
+            src/main/java/com/naharoo/localizer/domain/**/*,
+            src/main/java/com/naharoo/localizer/configuration/**/*,
+            src/main/java/com/naharoo/localizer/exception/**/*,
+            src/main/java/com/naharoo/localizer/Localizer.java,
+            **/*Dto.java
         </sonar.exclusions>
     </properties>
 
