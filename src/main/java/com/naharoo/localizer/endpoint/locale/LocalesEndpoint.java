@@ -89,12 +89,12 @@ public interface LocalesEndpoint {
 
     @ApiOperation(
         value = "Searches for Locales list",
-        notes = "Gets sorted and paginated Locales list"
+        notes = "Gets filtered, sorted and paginated Locales list"
     )
     @ApiResponses({
         @ApiResponse(
             code = 200,
-            message = "Successfully got sorted and paginated Locales list",
+            message = "Successfully got filtered, sorted and paginated Locales list",
             response = LocaleDto.class,
             responseContainer = "List"
         ),

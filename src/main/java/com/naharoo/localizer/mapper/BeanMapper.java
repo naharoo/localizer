@@ -43,7 +43,7 @@ public class BeanMapper extends ConfigurableMapper {
             .register();
 
         factory.classMap(LocaleSearchRequest.class, LocaleSearchRequestDto.class)
-            .constructorB("from", "size", "sortField", "sortOrder")
+            .constructorB("query", "from", "size", "sortField", "sortOrder")
             .byDefault()
             .register();
 

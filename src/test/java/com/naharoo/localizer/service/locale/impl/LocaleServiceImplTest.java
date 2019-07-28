@@ -333,6 +333,7 @@ class LocaleServiceImplTest {
     void search_normalCase() {
         // Given
         final LocaleSearchRequest searchRequest = LocaleTestHelper.createRandomLocaleSearchRequest();
+        final String query = searchRequest.getQuery();
         final PageRequest pageRequest = toPageRequest(
             searchRequest.getFrom(),
             searchRequest.getSize(),
@@ -347,7 +348,7 @@ class LocaleServiceImplTest {
         );
         final int expectedTotalItems = expectedLocales.size();
 
-        when(repository.search(pageRequest))
+        when(repository.search(query, pageRequest))
             .thenReturn(new PageImpl<>(expectedLocales, pageRequest, expectedTotalItems));
 
         // When
@@ -363,7 +364,7 @@ class LocaleServiceImplTest {
         final long actualTotalItems = response.getTotalItems();
         assertEquals(expectedTotalItems, actualTotalItems);
 
-        verify(repository).search(pageRequest);
+        verify(repository).search(query, pageRequest);
     }
 
     @ParameterizedTest(name = "Input: {arguments}")

@@ -93,6 +93,7 @@ public final class LocaleTestHelper {
 
     public static LocaleSearchRequestDto createRandomLocaleSearchRequestDto() {
         return createLocaleSearchRequestDto(
+            UUID.randomUUID().toString(),
             ThreadLocalRandom.current().nextInt(),
             ThreadLocalRandom.current().nextInt(),
             getRandomLocaleSorField(),
@@ -101,16 +102,18 @@ public final class LocaleTestHelper {
     }
 
     public static LocaleSearchRequestDto createLocaleSearchRequestDto(
+        final String query,
         final Integer from,
         final Integer size,
         final LocaleSortField sortField,
         final SortOrder sortOrder
     ) {
-        return new LocaleSearchRequestDto(from, size, sortField, sortOrder);
+        return new LocaleSearchRequestDto(query, from, size, sortField, sortOrder);
     }
 
     public static LocaleSearchRequest createRandomLocaleSearchRequest() {
         return createLocaleSearchRequest(
+            UUID.randomUUID().toString(),
             0,
             20,
             getRandomLocaleSorField(),
@@ -119,12 +122,13 @@ public final class LocaleTestHelper {
     }
 
     public static LocaleSearchRequest createLocaleSearchRequest(
+        final String query,
         final Integer from,
         final Integer size,
         final LocaleSortField sortField,
         final SortOrder sortOrder
     ) {
-        return new LocaleSearchRequest(from, size, sortField, sortOrder);
+        return new LocaleSearchRequest(query, from, size, sortField, sortOrder);
     }
 
     public static LocaleSortField getRandomLocaleSorField() {

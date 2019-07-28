@@ -35,6 +35,10 @@ class SearchLocalesEndToEndTest extends AbstractEndToEndTest {
         final List<LocaleTestData> expectedLocales = LocaleEndToEndTestHelper.getInitialData()
             .stream()
             .filter(localeTestData -> !localeTestData.isDeleted())
+            .filter(localeTestData ->
+                localeTestData.getKey().toLowerCase().contains(searchRequest.getString("query").toLowerCase()) ||
+                    localeTestData.getName().toLowerCase().contains(searchRequest.getString("query").toLowerCase())
+            )
             .sorted(Comparator.comparing(LocaleTestData::getKey).reversed())
             .collect(Collectors.toList());
 

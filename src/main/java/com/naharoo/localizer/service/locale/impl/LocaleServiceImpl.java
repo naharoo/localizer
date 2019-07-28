@@ -137,6 +137,7 @@ public class LocaleServiceImpl implements LocaleService {
         logger.trace("Searching for Locales...");
 
         final Page<Locale> page = localeRepository.search(
+            searchRequest.getQuery(),
             toPageRequest(
                 searchRequest.getFrom(),
                 searchRequest.getSize(),
