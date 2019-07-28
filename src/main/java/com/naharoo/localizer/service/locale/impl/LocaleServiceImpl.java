@@ -3,6 +3,7 @@ package com.naharoo.localizer.service.locale.impl;
 import com.naharoo.localizer.domain.GenericListResponse;
 import com.naharoo.localizer.domain.locale.Locale;
 import com.naharoo.localizer.domain.locale.LocaleCreationRequest;
+import com.naharoo.localizer.domain.locale.LocaleModificationRequest;
 import com.naharoo.localizer.domain.locale.LocaleSearchRequest;
 import com.naharoo.localizer.exception.ResourceAlreadyExistsException;
 import com.naharoo.localizer.exception.ResourceNotFoundException;
@@ -172,6 +173,30 @@ public class LocaleServiceImpl implements LocaleService {
 
         logger.debug("Done deleting Locale by id:'{}'.", id);
         return modifiedLocale;
+    }
+
+    @Transactional
+    @Override
+    public Locale update(final LocaleModificationRequest modificationRequest) {
+        expectNotNull(modificationRequest, "modificationRequest cannot be null.");
+        final String id = modificationRequest.getId();
+        expectNotEmpty(id, "modificationRequest.id cannot be empty.");
+        final String key = modificationRequest.getKey();
+        expectNotEmpty(key, "modificationRequest.key cannot be empty.");
+        final String name = modificationRequest.getName();
+        expectNotEmpty(name, "modificationRequest.name cannot be empty.");
+
+        logger.trace("Updating Locale:'{}' with properties: [key: '{}', name: '{}']...", id, key, name);
+
+        final Locale locale = getById(id);
+        locale.setKey(key);
+        locale.setName(name);
+        locale.setUpdated(LocalDateTime.now());
+
+        final Locale updatedLocale = localeRepository.save(locale);
+
+        logger.debug("Done updating Locale:'{}' with properties: [key: '{}', name: '{}']...", id, key, name);
+        return updatedLocale;
     }
 
 }

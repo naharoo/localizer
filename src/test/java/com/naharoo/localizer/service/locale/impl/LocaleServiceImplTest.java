@@ -3,6 +3,7 @@ package com.naharoo.localizer.service.locale.impl;
 import com.naharoo.localizer.domain.GenericListResponse;
 import com.naharoo.localizer.domain.locale.Locale;
 import com.naharoo.localizer.domain.locale.LocaleCreationRequest;
+import com.naharoo.localizer.domain.locale.LocaleModificationRequest;
 import com.naharoo.localizer.domain.locale.LocaleSearchRequest;
 import com.naharoo.localizer.exception.ResourceAlreadyExistsException;
 import com.naharoo.localizer.exception.ResourceNotFoundException;
@@ -56,6 +57,16 @@ class LocaleServiceImplTest {
             null,
             new LocaleCreationRequest(null, UUID.randomUUID().toString()),
             new LocaleCreationRequest(UUID.randomUUID().toString(), null)
+        );
+    }
+
+    static Stream<LocaleModificationRequest> illegalModificationArguments() {
+        return Stream.of(
+            null,
+            new LocaleModificationRequest(null, null, null),
+            new LocaleModificationRequest(null, UUID.randomUUID().toString(), UUID.randomUUID().toString()),
+            new LocaleModificationRequest(UUID.randomUUID().toString(), null, UUID.randomUUID().toString()),
+            new LocaleModificationRequest(UUID.randomUUID().toString(), UUID.randomUUID().toString(), null)
         );
     }
 
@@ -395,7 +406,77 @@ class LocaleServiceImplTest {
         final LocalDateTime deleted = actualLocale.getDeleted();
         assertNotNull(deleted);
         assertEquals(updated, deleted);
+
         verify(spy).getById(id);
         verify(repository).save(any(Locale.class));
+    }
+
+    @ParameterizedTest(name = "Input: {arguments}")
+    @MethodSource("illegalModificationArguments")
+    @DisplayName("Update should throw IllegalArgumentException when input is not valid")
+    void update_illegalArgs(final LocaleModificationRequest modificationRequest) {
+        // Given
+        // Illegal Input
+
+        // When
+        assertThrows(IllegalArgumentException.class, () -> service.update(modificationRequest));
+
+        // Then
+        // IllegalArgumentException is thrown
+    }
+
+    @Test
+    @DisplayName("Update should throw ResourceNotFoundException when Locale with provided id is not found")
+    void update_resourceNotFoundException() {
+        // Given
+        final LocaleServiceImpl spy = spy(new LocaleServiceImpl(repository));
+
+        final LocaleModificationRequest localeModificationRequest = LocaleTestHelper.createRandomLocaleModificationRequest();
+        final String id = localeModificationRequest.getId();
+
+        doThrow(ResourceNotFoundException.class)
+            .when(spy).getById(id);
+
+        // When
+        assertThrows(ResourceNotFoundException.class, () -> spy.update(localeModificationRequest));
+
+        // Then
+        verify(spy).getById(id);
+        verify(spy).update(localeModificationRequest);
+        verifyNoMoreInteractions(spy);
+    }
+
+    @Test
+    @DisplayName("Update should normally execute and return modified Locale when input is correct")
+    void update_normalCase() {
+        // Given
+        final LocaleServiceImpl spy = spy(new LocaleServiceImpl(repository));
+
+        final LocaleModificationRequest localeModificationRequest = LocaleTestHelper.createRandomLocaleModificationRequest();
+        final String id = localeModificationRequest.getId();
+        final String key = localeModificationRequest.getKey();
+        final String name = localeModificationRequest.getName();
+
+        final Locale locale = LocaleTestHelper.createRandomLocale();
+
+        doReturn(locale)
+            .when(spy).getById(id);
+        doAnswer(invocation -> invocation.getArgument(0))
+            .when(repository).save(any(Locale.class));
+
+        // When
+        final Locale updatedLocale = spy.update(localeModificationRequest);
+
+        // Then
+        assertThat(updatedLocale)
+            .isNotNull()
+            .isEqualToIgnoringGivenFields(locale, "key", "name", "updated");
+        assertEquals(key, updatedLocale.getKey());
+        assertEquals(name, updatedLocale.getName());
+
+        verify(spy).getById(id);
+        verify(spy).update(localeModificationRequest);
+        verify(repository).save(any(Locale.class));
+        verifyNoMoreInteractions(spy);
     }
 }

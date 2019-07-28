@@ -3,6 +3,8 @@ package com.naharoo.localizer.e2e.locale;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.naharoo.localizer.e2e.AbstractEndToEndTest;
 import com.naharoo.localizer.endpoint.locale.LocaleDto;
+import com.naharoo.localizer.endpoint.locale.LocaleModificationRequestDto;
+import com.naharoo.localizer.service.locale.LocaleTestHelper;
 import com.naharoo.localizer.testutils.json.JsonWrapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,9 +18,10 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class DeleteLocaleEndToEndTest extends AbstractEndToEndTest {
+class UpdateLocaleEndToEndTest extends AbstractEndToEndTest {
 
     @Autowired
     MockMvc mockMvc;
@@ -30,8 +33,8 @@ class DeleteLocaleEndToEndTest extends AbstractEndToEndTest {
     JsonWrapper localeCreationRequest;
 
     @Test
-    @DisplayName("Locale should be successfully deleted (200) when Locale with specified id exists")
-    void delete_200() throws Exception {
+    @DisplayName("Locale should be successfully updated (200) when Locale with specified id exists")
+    void update_200() throws Exception {
         // Given
         final MockHttpServletResponse response = mockMvc
             .perform(
@@ -57,10 +60,19 @@ class DeleteLocaleEndToEndTest extends AbstractEndToEndTest {
                     .accept(MediaType.APPLICATION_JSON_UTF8)
             ).andExpect(status().isOk());
 
+        final LocaleModificationRequestDto modificationRequestDto = LocaleTestHelper.createLocaleModificationRequestDto(
+            createdLocaleId,
+            UUID.randomUUID().toString(),
+            UUID.randomUUID().toString()
+        );
+        final String key = modificationRequestDto.getKey();
+        final String name = modificationRequestDto.getName();
+
         // When
         mockMvc
             .perform(
-                delete("/locales/" + createdLocaleId)
+                put("/locales")
+                    .content(objectMapper.writeValueAsString(modificationRequestDto))
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
                     .accept(MediaType.APPLICATION_JSON_UTF8)
             ).andExpect(status().isOk());
@@ -73,19 +85,23 @@ class DeleteLocaleEndToEndTest extends AbstractEndToEndTest {
                 get("/locales/id/" + createdLocaleId)
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
                     .accept(MediaType.APPLICATION_JSON_UTF8)
-            ).andExpect(status().isNotFound());
+            ).andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").value(createdLocaleId))
+            .andExpect(jsonPath("$.key").value(key))
+            .andExpect(jsonPath("$.name").value(name));
     }
 
     @Test
-    @DisplayName("DeleteLocale should respond with 404 Not Found when Locale with provided id is not found")
-    void delete_404() throws Exception {
+    @DisplayName("UpdateLocale should respond with 404 Not Found when Locale with provided id is not found")
+    void update_404() throws Exception {
         // Given
-        final String id = UUID.randomUUID().toString();
+        final LocaleModificationRequestDto modificationRequestDto = LocaleTestHelper.createRandomLocaleModificationRequestDto();
 
         // When
         final ResultActions result = mockMvc
             .perform(
-                delete("/locales/" + id)
+                put("/locales")
+                    .content(objectMapper.writeValueAsString(modificationRequestDto))
                     .accept(MediaType.APPLICATION_JSON_UTF8)
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
             );
