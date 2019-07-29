@@ -1,8 +1,11 @@
 package com.naharoo.localizer.service.resource.impl;
 
+import com.naharoo.localizer.domain.locale.Locale;
 import com.naharoo.localizer.domain.resource.Resource;
 import com.naharoo.localizer.domain.resource.ResourceModificationRequest;
+import com.naharoo.localizer.exception.ResourceAlreadyExistsException;
 import com.naharoo.localizer.exception.ResourceNotFoundException;
+import com.naharoo.localizer.helper.LocaleTestHelper;
 import com.naharoo.localizer.helper.ResourceTestHelper;
 import com.naharoo.localizer.repository.ResourceRepository;
 import com.naharoo.localizer.testutils.UnitTest;
@@ -11,11 +14,14 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,6 +35,74 @@ class ResourceServiceImplTest {
 
     @InjectMocks
     ResourceServiceImpl service;
+
+    static Stream<Locale> illegalLocalesForDelete() {
+        return Stream.of(
+            null,
+            LocaleTestHelper.createLocale(
+                null,
+                UUID.randomUUID().toString(),
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                LocalDateTime.now(),
+                LocalDateTime.now()
+            ),
+            LocaleTestHelper.createLocale(
+                "",
+                UUID.randomUUID().toString(),
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                LocalDateTime.now(),
+                LocalDateTime.now()
+            ),
+            LocaleTestHelper.createLocale(
+                "   ",
+                UUID.randomUUID().toString(),
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                LocalDateTime.now(),
+                LocalDateTime.now()
+            ),
+            LocaleTestHelper.createLocale(
+                UUID.randomUUID().toString(),
+                UUID.randomUUID().toString(),
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                LocalDateTime.now(),
+                null
+            )
+        );
+    }
+
+    static Stream<Locale> illegalLocalesForCreateAndFind() {
+        return Stream.of(
+            null,
+            LocaleTestHelper.createLocale(
+                null,
+                UUID.randomUUID().toString(),
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                LocalDateTime.now(),
+                LocalDateTime.now()
+            ),
+            LocaleTestHelper.createLocale(
+                "",
+                UUID.randomUUID().toString(),
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                LocalDateTime.now(),
+                LocalDateTime.now()
+            ),
+            LocaleTestHelper.createLocale(
+                "   ",
+                UUID.randomUUID().toString(),
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                LocalDateTime.now(),
+                LocalDateTime.now()
+            )
+        );
+    }
 
     @AfterEach
     void tearDown() {
@@ -263,4 +337,207 @@ class ResourceServiceImplTest {
         verifyNoMoreInteractions(serviceSpy);
     }
 
+    @Test
+    @DisplayName("DeleteByLocale should throw IllegalArgumentException when deleted is null")
+    void deleteByLocale_illegalDeleted() {
+        // Given
+        final LocalDateTime deleted = null;
+        final Locale locale = LocaleTestHelper.createRandomLocale();
+
+        // When
+        assertThrows(IllegalArgumentException.class, () -> service.deleteByLocale(locale, deleted));
+
+        // Then
+        // IllegalArgumentException is thrown
+    }
+
+    @ParameterizedTest(name = "Input: {arguments}")
+    @MethodSource("illegalLocalesForDelete")
+    @DisplayName("DeleteByLocale should throw IllegalArgumentException when provided Locale is not valid")
+    void deleteByLocale_IllegalLocale(final Locale locale) {
+        // Given
+        final LocalDateTime deleted = LocalDateTime.now();
+
+        // When
+        assertThrows(IllegalArgumentException.class, () -> service.deleteByLocale(locale, deleted));
+
+        // Then
+        // IllegalArgumentException is thrown
+    }
+
+    @Test
+    @DisplayName("DeleteByLocale should delegate localeId and deleted to repository and remove all resources")
+    void deleteByLocale_normalCase() {
+        // Given
+        final Locale locale = LocaleTestHelper.createRandomLocale();
+        final String localeId = locale.getId();
+        final LocalDateTime deleted = locale.getDeleted();
+
+        doNothing()
+            .when(repository).deleteByLocaleId(localeId, deleted);
+
+        // When
+        service.deleteByLocale(locale, deleted);
+
+        // Then
+        verify(repository).deleteByLocaleId(localeId, deleted);
+    }
+
+    @ParameterizedTest(name = "Input: {arguments}")
+    @EmptyStringSource
+    @DisplayName("Create Resource should throw IllegalArgumentException when input key is not valid")
+    void create_illegalKey(final String key) {
+        // Given
+        final Locale locale = LocaleTestHelper.createRandomLocale();
+        final String value = UUID.randomUUID().toString();
+
+        // When
+        assertThrows(IllegalArgumentException.class, () -> service.create(key, locale, value));
+
+        // Then
+        // IllegalArgumentException is thrown
+    }
+
+    @ParameterizedTest(name = "Input: {arguments}")
+    @EmptyStringSource
+    @DisplayName("Create Resource should throw IllegalArgumentException when input value is not valid")
+    void create_illegalValue(final String value) {
+        // Given
+        final Locale locale = LocaleTestHelper.createRandomLocale();
+        final String key = UUID.randomUUID().toString();
+
+        // When
+        assertThrows(IllegalArgumentException.class, () -> service.create(key, locale, value));
+
+        // Then
+        // IllegalArgumentException is thrown
+    }
+
+    @ParameterizedTest(name = "Input: {arguments}")
+    @MethodSource("illegalLocalesForCreateAndFind")
+    @DisplayName("Create Resource should throw IllegalArgumentException when input locale is not valid")
+    void create_illegalLocale(final Locale locale) {
+        // Given
+        final String key = UUID.randomUUID().toString();
+        final String value = UUID.randomUUID().toString();
+
+        // When
+        assertThrows(IllegalArgumentException.class, () -> service.create(key, locale, value));
+
+        // Then
+        // IllegalArgumentException is thrown
+    }
+
+    @Test
+    @DisplayName("Create Resource should throw ResourceAlreadyExistsException when another resource with same key and locale already exists")
+    void create_resourceAlreadyExistsException() {
+        // Given
+        final ResourceServiceImpl serviceSpy = spy(new ResourceServiceImpl(repository));
+
+        final String key = UUID.randomUUID().toString();
+        final String value = UUID.randomUUID().toString();
+        final Locale locale = LocaleTestHelper.createRandomLocale();
+        final Resource resource = ResourceTestHelper.createRandomResource();
+
+        doReturn(Optional.of(resource))
+            .when(serviceSpy).findByKeyAndLocale(key, locale);
+
+        // When
+        assertThrows(ResourceAlreadyExistsException.class, () -> serviceSpy.create(key, locale, value));
+
+        // Then
+        verify(serviceSpy).create(key, locale, value);
+        verify(serviceSpy).findByKeyAndLocale(key, locale);
+        verifyNoMoreInteractions(serviceSpy);
+    }
+
+    @Test
+    @DisplayName("Create Resource should successfully call repos save method with new locale data when input is valid")
+    void create_normalCase() {
+        // Given
+        final ResourceServiceImpl serviceSpy = spy(new ResourceServiceImpl(repository));
+
+        final String key = UUID.randomUUID().toString();
+        final Locale locale = LocaleTestHelper.createRandomLocale();
+        final String value = UUID.randomUUID().toString();
+
+        doReturn(Optional.empty())
+            .when(serviceSpy).findByKeyAndLocale(key, locale);
+        doAnswer(invocation -> {
+            final Resource resource = invocation.getArgument(0);
+
+            final LocalDateTime currentDateTime = LocalDateTime.now();
+            resource.setCreated(currentDateTime);
+            resource.setUpdated(currentDateTime);
+
+            return resource;
+        })
+            .when(repository).save(any(Resource.class));
+
+        // When
+        final Resource actualResource = serviceSpy.create(key, locale, value);
+
+        // Then
+        assertNotNull(actualResource);
+        assertEquals(key, actualResource.getKey());
+        assertEquals(locale, actualResource.getLocale());
+        assertEquals(value, actualResource.getValue());
+        assertNotNull(actualResource.getCreated());
+        assertNotNull(actualResource.getUpdated());
+
+        verify(serviceSpy).create(key, locale, value);
+        verify(serviceSpy).findByKeyAndLocale(key, locale);
+        verify(repository).save(any(Resource.class));
+        verifyNoMoreInteractions(serviceSpy);
+    }
+
+    @ParameterizedTest(name = "Input: {arguments}")
+    @EmptyStringSource
+    @DisplayName("FindByKeyAndLocale Resource should throw IllegalArgumentException when input key is empty")
+    void findByKeyAndLocale_illegalKey(final String key) {
+        // Given
+        final Locale locale = LocaleTestHelper.createRandomLocale();
+
+        // When
+        assertThrows(IllegalArgumentException.class, () -> service.findByKeyAndLocale(key, locale));
+
+        // Then
+        // IllegalArgumentException is thrown
+    }
+
+    @ParameterizedTest(name = "Input: {arguments}")
+    @MethodSource("illegalLocalesForCreateAndFind")
+    @DisplayName("FindByKeyAndLocale Resource should throw IllegalArgumentException when input locale is not valid")
+    void findByKeyAndLocale_illegalLocale(final Locale locale) {
+        // Given
+        final String key = UUID.randomUUID().toString();
+
+        // When
+        assertThrows(IllegalArgumentException.class, () -> service.findByKeyAndLocale(key, locale));
+
+        // Then
+        // IllegalArgumentException is thrown
+    }
+
+    @Test
+    @DisplayName("FindByKeyAndLocale Resource should delegate Optional from repo when input is valid")
+    void findByKeyAndLocale_normalCase() {
+        // Given
+        final String key = UUID.randomUUID().toString();
+        final Locale locale = LocaleTestHelper.createRandomLocale();
+        final Resource resource = ResourceTestHelper.createRandomResource();
+
+        when(repository.findByKeyIgnoreCaseAndLocaleAndDeletedIsNull(key, locale))
+            .thenReturn(Optional.of(resource));
+
+        // When
+        final Optional<Resource> actualResourceOpt = service.findByKeyAndLocale(key, locale);
+
+        // Then
+        assertThat(actualResourceOpt)
+            .isNotNull()
+            .get()
+            .isSameAs(resource);
+        verify(repository).findByKeyIgnoreCaseAndLocaleAndDeletedIsNull(key, locale);
+    }
 }

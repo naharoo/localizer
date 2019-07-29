@@ -43,7 +43,14 @@ public class ResourceAlreadyExistsException extends LocalizerException {
 
         final StringBuilder messageBuilder = new StringBuilder().append(simpleResourceName).append(" with identifiers [");
 
-        final String identifierString = identifiers.entrySet().stream().map(stringObjectEntry -> String.format("%s: %s", stringObjectEntry.getKey(), stringObjectEntry.getValue())).collect(Collectors.joining(", "));
+        final String identifierString = identifiers
+            .entrySet()
+            .stream()
+            .map(stringObjectEntry -> String.format(
+                "%s: %s",
+                stringObjectEntry.getKey(),
+                stringObjectEntry.getValue()
+            )).collect(Collectors.joining(", "));
 
         messageBuilder.append(identifierString).append("] already exists.");
 

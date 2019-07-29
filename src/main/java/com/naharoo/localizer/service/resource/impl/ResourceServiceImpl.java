@@ -1,7 +1,10 @@
 package com.naharoo.localizer.service.resource.impl;
 
+import com.google.common.collect.ImmutableMap;
+import com.naharoo.localizer.domain.locale.Locale;
 import com.naharoo.localizer.domain.resource.Resource;
 import com.naharoo.localizer.domain.resource.ResourceModificationRequest;
+import com.naharoo.localizer.exception.ResourceAlreadyExistsException;
 import com.naharoo.localizer.exception.ResourceNotFoundException;
 import com.naharoo.localizer.repository.ResourceRepository;
 import com.naharoo.localizer.service.resource.ResourceService;
@@ -105,6 +108,79 @@ public class ResourceServiceImpl implements ResourceService {
             value
         );
         return modifiedResource;
+    }
+
+    @Transactional
+    @Override
+    public void deleteByLocale(final Locale locale, final LocalDateTime deleted) {
+        expectNotNull(deleted, "deleted cannot be null.");
+        expectNotNull(locale, "locale cannot be null.");
+        final String localeId = locale.getId();
+        expectNotEmpty(localeId, "locale.id cannot be empty.");
+        final LocalDateTime localeDeleted = locale.getDeleted();
+        expectNotNull(localeDeleted, "locale.deleted cannot be null.");
+
+        logger.trace("Deleting all batches with Locale:'{}'... Setting deleted to '{}'.", localeId, deleted);
+
+        resourceRepository.deleteByLocaleId(localeId, deleted);
+
+        logger.debug(
+            "Done deleting all batches with Locale:'{}'. Their deleted field has been set to '{}'.",
+            localeId,
+            deleted
+        );
+    }
+
+    @Transactional
+    @Override
+    public Resource create(final String key, final Locale locale, final String value) {
+        expectNotEmpty(key, "key cannot be empty.");
+        expectNotEmpty(value, "value cannot be empty.");
+        expectNotNull(locale, "locale cannot be empty.");
+        final String localeId = locale.getId();
+        expectNotEmpty(localeId, "locale.id cannot be empty.");
+
+        logger.trace("Creating Resource with key '{}' and value '{}' in Locale:'{}'...", key, value, localeId);
+
+        final Optional<Resource> resourceOpt = findByKeyAndLocale(key, locale);
+        if (resourceOpt.isPresent()) {
+            logger.warn("Another Resource with key:'{}' and Locale:'{}' already exists.", key, localeId);
+            throw ResourceAlreadyExistsException.with(
+                Resource.class,
+                ImmutableMap.<String, Object>builder()
+                    .put("key", key)
+                    .put("localeId", localeId)
+                    .build()
+            );
+        }
+
+        final Resource resource = new Resource(key, locale, value);
+        final Resource createdResource = resourceRepository.save(resource);
+
+        logger.debug(
+            "Done creating Resource:'{}' with key '{}' and value '{}' in Locale:'{}'...",
+            createdResource.getId(),
+            key,
+            value,
+            localeId
+        );
+        return createdResource;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Optional<Resource> findByKeyAndLocale(final String key, final Locale locale) {
+        expectNotEmpty(key, "key cannot be empty.");
+        expectNotNull(locale, "locale cannot be null.");
+        final String localeId = locale.getId();
+        expectNotEmpty(localeId, "locale.id cannot be empty.");
+
+        logger.trace("Finding Resource with key:'{}' and Locale:'{}'...", key, localeId);
+
+        final Optional<Resource> resourceOpt = resourceRepository.findByKeyIgnoreCaseAndLocaleAndDeletedIsNull(key, locale);
+
+        logger.debug("Done finding Resource with key:'{}' and Locale:'{}'.", key, localeId);
+        return resourceOpt;
     }
 
 }

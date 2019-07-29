@@ -3,7 +3,7 @@ package com.naharoo.localizer.endpoint.locale;
 import com.naharoo.localizer.domain.locale.Locale;
 import com.naharoo.localizer.endpoint.AbstractEndpointTest;
 import com.naharoo.localizer.helper.LocaleTestHelper;
-import com.naharoo.localizer.service.locale.LocaleService;
+import com.naharoo.localizer.service.ResourceManager;
 import com.naharoo.localizer.testutils.source.EmptyStringSource;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,7 +19,7 @@ import static org.mockito.Mockito.*;
 class DeleteLocaleEndpointTest extends AbstractEndpointTest {
 
     @Mock
-    LocaleService localeService;
+    ResourceManager resourceManager;
 
     @InjectMocks
     LocalesEndpointImpl endpoint;
@@ -27,7 +27,7 @@ class DeleteLocaleEndpointTest extends AbstractEndpointTest {
     @AfterEach
     void tearDown() {
         validateMockitoUsage();
-        verifyNoMoreInteractions(localeService);
+        verifyNoMoreInteractions(resourceManager);
     }
 
     @ParameterizedTest(name = "Input: {arguments}")
@@ -51,7 +51,7 @@ class DeleteLocaleEndpointTest extends AbstractEndpointTest {
         final Locale locale = LocaleTestHelper.createRandomLocale();
         final String id = locale.getId();
 
-        when(localeService.delete(id))
+        when(resourceManager.cascadeDeleteLocale(id))
             .thenReturn(locale);
 
         // When
@@ -62,7 +62,7 @@ class DeleteLocaleEndpointTest extends AbstractEndpointTest {
             .isNotNull()
             .isEqualToComparingFieldByField(locale);
 
-        verify(localeService).delete(id);
+        verify(resourceManager).cascadeDeleteLocale(id);
         verify(mapper).map(locale, LocaleDto.class);
     }
 }

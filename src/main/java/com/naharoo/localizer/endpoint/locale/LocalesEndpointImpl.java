@@ -6,6 +6,7 @@ import com.naharoo.localizer.domain.locale.LocaleCreationRequest;
 import com.naharoo.localizer.domain.locale.LocaleModificationRequest;
 import com.naharoo.localizer.domain.locale.LocaleSearchRequest;
 import com.naharoo.localizer.mapper.BeanMapper;
+import com.naharoo.localizer.service.ResourceManager;
 import com.naharoo.localizer.service.locale.LocaleService;
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
@@ -23,10 +24,16 @@ public class LocalesEndpointImpl implements LocalesEndpoint {
 
     private final BeanMapper mapper;
     private final LocaleService localeService;
+    private final ResourceManager resourceManager;
 
-    public LocalesEndpointImpl(final BeanMapper mapper, final LocaleService localeService) {
+    public LocalesEndpointImpl(
+        final BeanMapper mapper,
+        final LocaleService localeService,
+        final ResourceManager resourceManager
+    ) {
         this.mapper = mapper;
         this.localeService = localeService;
+        this.resourceManager = resourceManager;
     }
 
     @Transactional
@@ -108,7 +115,7 @@ public class LocalesEndpointImpl implements LocalesEndpoint {
 
         logger.debug("Deleting Locale by id:'{}'...", id);
 
-        final Locale locale = localeService.delete(id);
+        final Locale locale = resourceManager.cascadeDeleteLocale(id);
         final LocaleDto result = mapper.map(locale, LocaleDto.class);
 
         logger.info("Done deleting Locale by id:'{}'.", id);

@@ -1,8 +1,10 @@
 package com.naharoo.localizer.service.resource;
 
+import com.naharoo.localizer.domain.locale.Locale;
 import com.naharoo.localizer.domain.resource.Resource;
 import com.naharoo.localizer.domain.resource.ResourceModificationRequest;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 public interface ResourceService {
@@ -14,4 +16,10 @@ public interface ResourceService {
     Optional<Resource> findById(String id);
 
     Resource update(ResourceModificationRequest modificationRequest);
+
+    void deleteByLocale(Locale locale, LocalDateTime deleted);
+
+    Resource create(String key, Locale locale, String value);
+
+    Optional<Resource> findByKeyAndLocale(String key, Locale locale);
 }
