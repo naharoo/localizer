@@ -13,9 +13,11 @@ import javax.persistence.*;
 @Entity
 @Table(name = "l_locale",
     uniqueConstraints = {
+        @UniqueConstraint(name = "l_locale_id_pk", columnNames = "id"),
         @UniqueConstraint(name = "l_locale_key_deleted_uk", columnNames = {"key", "deleted"})
     },
     indexes = {
+        @Index(name = "l_locale_id_pk", columnList = "id", unique = true),
         @Index(name = "l_locale_key_deleted_uk", columnList = "key, deleted", unique = true)
     }
 )
