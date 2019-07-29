@@ -167,7 +167,6 @@ public class LocaleServiceImpl implements LocaleService {
 
         final Locale existingLocale = getById(id);
         final LocalDateTime currentDateTime = LocalDateTime.now();
-        existingLocale.setUpdated(currentDateTime);
         existingLocale.setDeleted(currentDateTime);
 
         final Locale modifiedLocale = localeRepository.save(existingLocale);
@@ -192,7 +191,6 @@ public class LocaleServiceImpl implements LocaleService {
         final Locale locale = getById(id);
         locale.setKey(key);
         locale.setName(name);
-        locale.setUpdated(LocalDateTime.now());
 
         final Locale updatedLocale = localeRepository.save(locale);
 

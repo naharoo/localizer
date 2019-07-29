@@ -387,7 +387,6 @@ class LocaleServiceImplTest {
         assertNotNull(updated);
         final LocalDateTime deleted = actualLocale.getDeleted();
         assertNotNull(deleted);
-        assertEquals(updated, deleted);
 
         verify(spy).getById(id);
         verify(repository).save(any(Locale.class));
