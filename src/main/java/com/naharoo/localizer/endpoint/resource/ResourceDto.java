@@ -35,7 +35,7 @@ public class ResourceDto {
         required = true,
         position = 2
     )
-    private final LocaleDto localeDto;
+    private final LocaleDto locale;
 
     @ApiModelProperty(
         notes = "Localized value of the Resource.",
@@ -72,7 +72,7 @@ public class ResourceDto {
     public ResourceDto(
         @JsonProperty("id") final String id,
         @JsonProperty("key") final String key,
-        @JsonProperty("localeDto") final LocaleDto localeDto,
+        @JsonProperty("locale") final LocaleDto locale,
         @JsonProperty("value") final String value,
         @JsonProperty("created") final LocalDateTime created,
         @JsonProperty("updated") final LocalDateTime updated,
@@ -80,7 +80,7 @@ public class ResourceDto {
     ) {
         this.id = id;
         this.key = key;
-        this.localeDto = localeDto;
+        this.locale = locale;
         this.value = value;
         this.created = created;
         this.updated = updated;
