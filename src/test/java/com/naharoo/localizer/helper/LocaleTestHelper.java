@@ -1,4 +1,4 @@
-package com.naharoo.localizer.service.locale;
+package com.naharoo.localizer.helper;
 
 import com.naharoo.localizer.domain.SortOrder;
 import com.naharoo.localizer.domain.locale.*;

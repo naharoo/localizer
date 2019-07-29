@@ -2,8 +2,8 @@ package com.naharoo.localizer.endpoint.locale;
 
 import com.naharoo.localizer.domain.locale.Locale;
 import com.naharoo.localizer.endpoint.AbstractEndpointTest;
+import com.naharoo.localizer.helper.LocaleTestHelper;
 import com.naharoo.localizer.service.locale.LocaleService;
-import com.naharoo.localizer.service.locale.LocaleTestHelper;
 import com.naharoo.localizer.testutils.source.EmptyStringSource;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;

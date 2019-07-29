@@ -2,8 +2,8 @@ package com.naharoo.localizer.mapper.locale;
 
 import com.naharoo.localizer.domain.locale.LocaleModificationRequest;
 import com.naharoo.localizer.endpoint.locale.LocaleModificationRequestDto;
+import com.naharoo.localizer.helper.LocaleTestHelper;
 import com.naharoo.localizer.mapper.AbstractMapperTest;
-import com.naharoo.localizer.service.locale.LocaleTestHelper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
