@@ -183,4 +183,31 @@ public class ResourceServiceImpl implements ResourceService {
         return resourceOpt;
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public Resource getByKeyAndLocale(final String key, final Locale locale) {
+        expectNotEmpty(key, "key cannot be empty.");
+        expectNotNull(locale, "locale cannot be null.");
+        final String localeId = locale.getId();
+        expectNotEmpty(localeId, "locale.id cannot be empty.");
+
+        logger.trace("Getting Resource with [key: '{}', locale: '{}']", key, locale);
+
+        final Optional<Resource> resourceOpt = findByKeyAndLocale(key, locale);
+        if (resourceOpt.isEmpty()) {
+            logger.warn("No Resource has been found with key '{}' and localeId '{}'.", key, localeId);
+            throw ResourceNotFoundException.with(
+                Resource.class,
+                ImmutableMap.<String, Object>builder()
+                    .put("key", key)
+                    .put("localeId", localeId)
+                    .build()
+            );
+        }
+        final Resource resource = resourceOpt.get();
+
+        logger.debug("Done getting Resource:'{}' with [key: '{}', locale: '{}']", resource.getId(), key, locale);
+        return resource;
+    }
+
 }

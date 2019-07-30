@@ -22,4 +22,6 @@ public interface ResourceService {
     Resource create(String key, Locale locale, String value);
 
     Optional<Resource> findByKeyAndLocale(String key, Locale locale);
+
+    Resource getByKeyAndLocale(String key, Locale locale);
 }

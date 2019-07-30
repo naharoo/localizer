@@ -74,7 +74,7 @@ class ResourceServiceImplTest {
         );
     }
 
-    static Stream<Locale> illegalLocalesForCreateAndFind() {
+    static Stream<Locale> illegalLocales() {
         return Stream.of(
             null,
             LocaleTestHelper.createLocale(
@@ -414,7 +414,7 @@ class ResourceServiceImplTest {
     }
 
     @ParameterizedTest(name = "Input: {arguments}")
-    @MethodSource("illegalLocalesForCreateAndFind")
+    @MethodSource("illegalLocales")
     @DisplayName("Create Resource should throw IllegalArgumentException when input locale is not valid")
     void create_illegalLocale(final Locale locale) {
         // Given
@@ -506,7 +506,7 @@ class ResourceServiceImplTest {
     }
 
     @ParameterizedTest(name = "Input: {arguments}")
-    @MethodSource("illegalLocalesForCreateAndFind")
+    @MethodSource("illegalLocales")
     @DisplayName("FindByKeyAndLocale Resource should throw IllegalArgumentException when input locale is not valid")
     void findByKeyAndLocale_illegalLocale(final Locale locale) {
         // Given
@@ -539,5 +539,80 @@ class ResourceServiceImplTest {
             .get()
             .isSameAs(resource);
         verify(repository).findByKeyIgnoreCaseAndLocaleAndDeletedIsNull(key, locale);
+    }
+
+    @ParameterizedTest(name = "Input: {arguments}")
+    @EmptyStringSource
+    @DisplayName("GetByKeyAndLocale should throw IllegalArgumentException when provided key is empty")
+    void getByKeyAndLocale_illegalKey(final String key) {
+        // Given
+        final Locale locale = LocaleTestHelper.createRandomLocale();
+
+        // When
+        assertThrows(IllegalArgumentException.class, () -> service.getByKeyAndLocale(key, locale));
+
+        // Then
+        // IllegalArgumentException
+    }
+
+    @ParameterizedTest(name = "Input: {arguments}")
+    @MethodSource("illegalLocales")
+    @DisplayName("GetByKeyAndLocale should throw IllegalArgumentException when provided locale is not valid")
+    void getByKeyAndLocale_illegalLocale(final Locale locale) {
+        // Given
+        final String key = UUID.randomUUID().toString();
+
+        // When
+        assertThrows(IllegalArgumentException.class, () -> service.getByKeyAndLocale(key, locale));
+
+        // Then
+        // IllegalArgumentException is thrown
+    }
+
+    @Test
+    @DisplayName("GetByKeyAndLocale should throw ResourceNotFoundException when FindByKeyAndLocale return empty optional")
+    void getByKeyAndLocale_resourceNotFound() {
+        // Given
+        final ResourceServiceImpl serviceSpy = spy(new ResourceServiceImpl(repository));
+
+        final Locale locale = LocaleTestHelper.createRandomLocale();
+        final String key = UUID.randomUUID().toString();
+
+        doReturn(Optional.empty())
+            .when(serviceSpy).findByKeyAndLocale(key, locale);
+
+        // When
+        assertThrows(ResourceNotFoundException.class, () -> serviceSpy.getByKeyAndLocale(key, locale));
+
+        // Then
+        verify(serviceSpy).getByKeyAndLocale(key, locale);
+        verify(serviceSpy).findByKeyAndLocale(key, locale);
+        verifyNoMoreInteractions(serviceSpy);
+    }
+
+    @Test
+    @DisplayName("GetResourceByKeyAndLocaleKey should execute normally and return found Resource when input is valid and resource exists")
+    void getByKeyAndLocale_normalCase() {
+        // Given
+        final ResourceServiceImpl serviceSpy = spy(new ResourceServiceImpl(repository));
+
+        final Locale locale = LocaleTestHelper.createRandomLocale();
+        final Resource resource = ResourceTestHelper.createRandomResource();
+        final String key = resource.getKey();
+
+        doReturn(Optional.of(resource))
+            .when(serviceSpy).findByKeyAndLocale(key, locale);
+
+        // When
+        final Resource actualResource = serviceSpy.getByKeyAndLocale(key, locale);
+
+        // Then
+        assertThat(actualResource)
+            .isNotNull()
+            .isSameAs(resource);
+
+        verify(serviceSpy).getByKeyAndLocale(key, locale);
+        verify(serviceSpy).findByKeyAndLocale(key, locale);
+        verifyNoMoreInteractions(serviceSpy);
     }
 }
