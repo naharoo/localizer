@@ -64,4 +64,28 @@ public interface ResourcesEndpoint {
     @GetMapping("/id/{id}")
     @ResponseStatus(HttpStatus.OK)
     ResourceDto getById(@NotBlank @PathVariable(value = "id", required = false) String id);
+
+    @ApiOperation(
+        value = "Get a Resource by key and Locale key",
+        notes = "Gets a Resource using provided Resource key and Locale key",
+        response = ResourceDto.class
+    )
+    @ApiResponses({
+        @ApiResponse(
+            code = 200,
+            message = "Successfully got a Resource",
+            response = ResourceDto.class
+        ),
+        @ApiResponse(
+            code = 404,
+            message = "No Locale/Resource has been found for provided key / key combination",
+            response = LocalizerApiErrorDto.class
+        )
+    })
+    @GetMapping("/key/{key}/locale/{localeKey}")
+    @ResponseStatus(HttpStatus.OK)
+    ResourceDto getByKeyAndLocaleKey(
+        @NotBlank @PathVariable(value = "key", required = false) String key,
+        @NotBlank @PathVariable(value = "localeKey", required = false) String localeKey
+    );
 }

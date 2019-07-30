@@ -185,7 +185,7 @@ public class ResourceServiceImpl implements ResourceService {
 
         logger.trace("Finding Resource with key:'{}' and Locale:'{}'...", key, localeId);
 
-        final Optional<Resource> resourceOpt = resourceRepository.findByKeyIgnoreCaseAndLocaleAndDeletedIsNull(key, locale);
+        final Optional<Resource> resourceOpt = resourceRepository.findByKeyAndLocaleId(key, localeId);
 
         logger.debug("Done finding Resource with key:'{}' and Locale:'{}'.", key, localeId);
         return resourceOpt;

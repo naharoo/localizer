@@ -38,6 +38,7 @@
         <orika.version>1.5.4</orika.version>
         <javassist.version>3.25.0-GA</javassist.version>
         <springfox-swagger.version>2.9.2</springfox-swagger.version>
+        <ehcache.version>3.8.0</ehcache.version>
         <validation-api.version>2.0.1.Final</validation-api.version>
         <jsr305.version>3.0.2</jsr305.version>
         <logstash-logback-encoder.version>6.1</logstash-logback-encoder.version>
@@ -447,6 +448,13 @@
                 <groupId>javax.validation</groupId>
                 <artifactId>validation-api</artifactId>
                 <version>${validation-api.version}</version>
+            </dependency>
+
+            <!--Ehcache-->
+            <dependency>
+                <groupId>org.ehcache</groupId>
+                <artifactId>ehcache</artifactId>
+                <version>${ehcache.version}</version>
             </dependency>
 
             <!--Logstash for Logback-->

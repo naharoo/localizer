@@ -534,9 +534,10 @@ class ResourceServiceImplTest {
         // Given
         final String key = UUID.randomUUID().toString();
         final Locale locale = LocaleTestHelper.createRandomLocale();
+        final String localeId = locale.getId();
         final Resource resource = ResourceTestHelper.createRandomResource();
 
-        when(repository.findByKeyIgnoreCaseAndLocaleAndDeletedIsNull(key, locale))
+        when(repository.findByKeyAndLocaleId(key, localeId))
             .thenReturn(Optional.of(resource));
 
         // When
@@ -547,7 +548,7 @@ class ResourceServiceImplTest {
             .isNotNull()
             .get()
             .isSameAs(resource);
-        verify(repository).findByKeyIgnoreCaseAndLocaleAndDeletedIsNull(key, locale);
+        verify(repository).findByKeyAndLocaleId(key, localeId);
     }
 
     @ParameterizedTest(name = "Input: {arguments}")

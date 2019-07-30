@@ -76,4 +76,19 @@ public class ResourcesEndpointImpl implements ResourcesEndpoint {
         logger.info("Done getting Resource by id:'{}'.", id);
         return result;
     }
+
+    @Transactional(readOnly = true)
+    @Override
+    public ResourceDto getByKeyAndLocaleKey(final String key, final String localeKey) {
+        expectNotEmpty(key, "key cannot be empty.");
+        expectNotEmpty(localeKey, "localeKey cannot be empty.");
+
+        logger.debug("Getting Resource with [resourceKey: '{}', localeKey:'{}']...", key, localeKey);
+
+        final Resource resource = manager.getResourceByKeyAndLocaleKey(key, localeKey);
+        final ResourceDto result = mapper.map(resource, ResourceDto.class);
+
+        logger.info("Done getting Resource:'{}' with [resourceKey: '{}', localeKey:'{}'].", result.getId(), key, localeKey);
+        return result;
+    }
 }

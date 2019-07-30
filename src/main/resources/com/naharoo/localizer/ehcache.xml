@@ -9,7 +9,7 @@
         <jsr107:defaults enable-management="false" enable-statistics="false" default-template="tiny"/>
     </service>
 
-    <cache alias="default-query-results-region" uses-template="tiny"/>
+    <cache alias="default-query-results-region" uses-template="rareUpdate"/>
     <cache alias="default-update-timestamps-region" uses-template="tiny"/>
 
     <cache alias="com.naharoo.localizer.domain.locale.Locale" uses-template="rareUpdate"/>

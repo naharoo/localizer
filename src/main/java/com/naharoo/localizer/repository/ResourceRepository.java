@@ -1,6 +1,5 @@
 package com.naharoo.localizer.repository;
 
-import com.naharoo.localizer.domain.locale.Locale;
 import com.naharoo.localizer.domain.resource.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,8 +19,13 @@ public interface ResourceRepository extends JpaRepository<Resource, String> {
     @QueryHints(@QueryHint(name = "org.hibernate.cacheable", value = "true"))
     Optional<Resource> findByIdAndDeletedIsNull(String id);
 
+    @Query("select r " +
+        "   from Resource r " +
+        "   where r.deleted is null " +
+        "     and lower(r.key) = lower(:key) " +
+        "     and lower(r.locale.id) = lower(:localeId) ")
     @QueryHints(@QueryHint(name = "org.hibernate.cacheable", value = "true"))
-    Optional<Resource> findByKeyIgnoreCaseAndLocaleAndDeletedIsNull(String key, Locale locale);
+    Optional<Resource> findByKeyAndLocaleId(@Param("key") String key, @Param("localeId") String localeId);
 
     @Query("select r " +
         "   from Resource r " +
