@@ -155,8 +155,8 @@ public final class ResourceTestHelper {
         return createResourceSearchRequest(
             UUID.randomUUID().toString(),
             UUID.randomUUID().toString(),
-            ThreadLocalRandom.current().nextInt(),
-            ThreadLocalRandom.current().nextInt(),
+            0,
+            20,
             getRandomResourceSorField(),
             SortOrder.ASC
         );

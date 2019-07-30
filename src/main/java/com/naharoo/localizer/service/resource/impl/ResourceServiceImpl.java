@@ -1,19 +1,27 @@
 package com.naharoo.localizer.service.resource.impl;
 
 import com.google.common.collect.ImmutableMap;
+import com.naharoo.localizer.domain.GenericListResponse;
+import com.naharoo.localizer.domain.SortOrder;
 import com.naharoo.localizer.domain.locale.Locale;
 import com.naharoo.localizer.domain.resource.Resource;
 import com.naharoo.localizer.domain.resource.ResourceModificationRequest;
+import com.naharoo.localizer.domain.resource.ResourceSearchRequest;
+import com.naharoo.localizer.domain.resource.ResourceSortField;
 import com.naharoo.localizer.exception.ResourceAlreadyExistsException;
 import com.naharoo.localizer.exception.ResourceNotFoundException;
 import com.naharoo.localizer.repository.ResourceRepository;
 import com.naharoo.localizer.service.resource.ResourceService;
+import com.naharoo.localizer.utils.PaginationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static com.naharoo.localizer.utils.Assertions.expectNotEmpty;
@@ -208,6 +216,50 @@ public class ResourceServiceImpl implements ResourceService {
 
         logger.debug("Done getting Resource:'{}' with [key: '{}', locale: '{}']", resource.getId(), key, locale);
         return resource;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public GenericListResponse<Resource> search(final ResourceSearchRequest searchRequest) {
+        expectNotNull(searchRequest, "searchRequest cannot be null.");
+
+        final String query = searchRequest.getQuery();
+        final String localeQuery = searchRequest.getLocaleQuery();
+        final int from = searchRequest.getFrom();
+        final int size = searchRequest.getSize();
+        final ResourceSortField sortField = searchRequest.getSortField();
+        final SortOrder sortOrder = searchRequest.getSortOrder();
+
+        logger.trace(
+            "Searching for Resources with [query: '{}', localeQuery: '{}', from: {}, size: {}, sortField: {}, " +
+                "sortOrder: {}]",
+            query,
+            localeQuery,
+            from,
+            size,
+            sortField,
+            sortOrder
+        );
+
+        final PageRequest pageRequest = PaginationUtils.toPageRequest(from, size, sortField, sortOrder);
+        final Page<Resource> resourcePage = resourceRepository.search(query, localeQuery, pageRequest);
+        final List<Resource> resources = resourcePage.getContent();
+        final long totalItems = resourcePage.getTotalElements();
+        final GenericListResponse<Resource> response = new GenericListResponse<>(resources, totalItems);
+
+        logger.debug(
+            "Done searching for {} of total {} Resources with [query: '{}', localeQuery: '{}', from: {}, " +
+                "size: {}, sortField: {}, sortOrder: {}]",
+            resourcePage.getSize(),
+            totalItems,
+            query,
+            localeQuery,
+            from,
+            size,
+            sortField,
+            sortOrder
+        );
+        return response;
     }
 
 }

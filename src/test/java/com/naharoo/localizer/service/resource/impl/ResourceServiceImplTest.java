@@ -1,8 +1,12 @@
 package com.naharoo.localizer.service.resource.impl;
 
+import com.naharoo.localizer.domain.GenericListResponse;
+import com.naharoo.localizer.domain.SortOrder;
 import com.naharoo.localizer.domain.locale.Locale;
 import com.naharoo.localizer.domain.resource.Resource;
 import com.naharoo.localizer.domain.resource.ResourceModificationRequest;
+import com.naharoo.localizer.domain.resource.ResourceSearchRequest;
+import com.naharoo.localizer.domain.resource.ResourceSortField;
 import com.naharoo.localizer.exception.ResourceAlreadyExistsException;
 import com.naharoo.localizer.exception.ResourceNotFoundException;
 import com.naharoo.localizer.helper.LocaleTestHelper;
@@ -10,6 +14,7 @@ import com.naharoo.localizer.helper.ResourceTestHelper;
 import com.naharoo.localizer.repository.ResourceRepository;
 import com.naharoo.localizer.testutils.UnitTest;
 import com.naharoo.localizer.testutils.source.EmptyStringSource;
+import com.naharoo.localizer.utils.PaginationUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,8 +22,12 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -614,5 +623,58 @@ class ResourceServiceImplTest {
         verify(serviceSpy).getByKeyAndLocale(key, locale);
         verify(serviceSpy).findByKeyAndLocale(key, locale);
         verifyNoMoreInteractions(serviceSpy);
+    }
+
+    @Test
+    @DisplayName("Search Resources should throw IllegalArgumentException when search request is null")
+    void search_illegalSearchRequest() {
+        // Given
+        final ResourceSearchRequest searchRequest = null;
+
+        // When
+        assertThrows(IllegalArgumentException.class, () -> service.search(searchRequest));
+
+        // Then
+        // IllegalArgumentException is thrown
+    }
+
+    @Test
+    @DisplayName("Search Resources should normally execute and return found Resources when search request is valid")
+    void search_normalCase() {
+        // Given
+        final ResourceSearchRequest searchRequest = ResourceTestHelper.createRandomResourceSearchRequest();
+        final String query = searchRequest.getQuery();
+        final String localeQuery = searchRequest.getLocaleQuery();
+
+        final int from = searchRequest.getFrom();
+        final int size = searchRequest.getSize();
+        final ResourceSortField sortField = searchRequest.getSortField();
+        final SortOrder sortOrder = searchRequest.getSortOrder();
+
+        final PageRequest pageable = PaginationUtils.toPageRequest(from, size, sortField, sortOrder);
+
+        final List<Resource> expectedItems = Arrays.asList(
+            ResourceTestHelper.createRandomResource(),
+            ResourceTestHelper.createRandomResource(),
+            ResourceTestHelper.createRandomResource()
+        );
+        final int expectedTotalItems = expectedItems.size();
+
+        when(repository.search(query, localeQuery, pageable))
+            .thenReturn(new PageImpl<>(expectedItems, pageable, expectedTotalItems));
+
+        // When
+        final GenericListResponse<Resource> actualResponse = service.search(searchRequest);
+
+        // Then
+        assertNotNull(actualResponse);
+        final List<Resource> actualItems = actualResponse.getItems();
+        assertThat(actualItems)
+            .isNotNull()
+            .isNotEmpty()
+            .containsExactlyInAnyOrderElementsOf(expectedItems);
+        final long actualTotalItems = actualResponse.getTotalItems();
+        assertEquals(expectedTotalItems, actualTotalItems);
+        verify(repository).search(query, localeQuery, pageable);
     }
 }
