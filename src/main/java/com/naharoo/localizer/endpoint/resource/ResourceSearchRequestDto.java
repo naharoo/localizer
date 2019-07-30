@@ -29,7 +29,7 @@ public class ResourceSearchRequestDto {
     @ApiModelProperty(
         notes = "Query string which will be searched in Locales' key and name fields. No filtering by query will be applied if null is provided.",
         example = "en-US",
-        position = 0
+        position = 1
     )
     private final String localeQuery;
 
@@ -37,7 +37,7 @@ public class ResourceSearchRequestDto {
     @ApiModelProperty(
         notes = "Specifies from which index should sorted Resource list be fetched. Default value 0 will be picked if not provided.",
         example = "0",
-        position = 1
+        position = 2
     )
     private final Integer from;
 
@@ -45,21 +45,21 @@ public class ResourceSearchRequestDto {
     @ApiModelProperty(
         notes = "Specifies how many Resource should  be fetched. Default value 20 will be picked if not provided.",
         example = "20",
-        position = 2
+        position = 3
     )
     private final Integer size;
 
     @ApiModelProperty(
         notes = "Specifies which Resource field will be used for sorting. Default value ID will be picked if not provided.",
         example = "ID",
-        position = 3
+        position = 4
     )
     private final ResourceSortField sortField;
 
     @ApiModelProperty(
         notes = "Specifies in which order Resource should be sorting. Default value ASC will be picked if not provided.",
         example = "ASC",
-        position = 4
+        position = 5
     )
     private final SortOrder sortOrder;
 

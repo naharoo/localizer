@@ -24,7 +24,7 @@ public class ResourceCreationRequestDto {
     @NotBlank
     @ApiModelProperty(
         notes = "LocaleId of Resource. Together with Key is composite unique identifier of Resource. No two resources can have the same key + locale pair.",
-        example = "{'key':'en-US'}",
+        example = "4370dff7-a73a-47a3-9672-fa2379deae5b",
         required = true,
         position = 1
     )
