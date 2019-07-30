@@ -10,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Api(tags = "Resources", description = "Resources & relative endpoints")
@@ -42,4 +43,25 @@ public interface ResourcesEndpoint {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     ResourceDto create(@Valid @NotNull @RequestBody(required = false) ResourceCreationRequestDto creationRequestDto);
+
+    @ApiOperation(
+        value = "Get a Resource by id",
+        notes = "Gets a Resource using provided id",
+        response = ResourceDto.class
+    )
+    @ApiResponses({
+        @ApiResponse(
+            code = 200,
+            message = "Successfully got a Resource",
+            response = ResourceDto.class
+        ),
+        @ApiResponse(
+            code = 404,
+            message = "No Resource has been found for provided id",
+            response = LocalizerApiErrorDto.class
+        )
+    })
+    @GetMapping("/id/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    ResourceDto getById(@NotBlank @PathVariable(value = "id", required = false) String id);
 }

@@ -7,12 +7,13 @@ import com.naharoo.localizer.service.ResourceManager;
 import com.naharoo.localizer.service.resource.ResourceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.naharoo.localizer.utils.Assertions.expectNotEmpty;
 import static com.naharoo.localizer.utils.Assertions.expectNotNull;
 
-@Component
+@Controller
 public class ResourcesEndpointImpl implements ResourcesEndpoint {
 
     private static final Logger logger = LoggerFactory.getLogger(ResourcesEndpointImpl.class);
@@ -31,6 +32,7 @@ public class ResourcesEndpointImpl implements ResourcesEndpoint {
         this.manager = manager;
     }
 
+    @Transactional
     @Override
     public ResourceDto create(final ResourceCreationRequestDto creationRequestDto) {
         expectNotNull(creationRequestDto, "creationRequestDto cannot be null.");
@@ -53,12 +55,25 @@ public class ResourcesEndpointImpl implements ResourcesEndpoint {
         final ResourceDto result = mapper.map(createdResource, ResourceDto.class);
 
         logger.info(
-            "Done creating Resource:'{}' with [key: '{}', localeId: '{}', value: '{}']...",
+            "Done creating Resource:'{}' with [key: '{}', localeId: '{}', value: '{}'].",
             result.getId(),
             key,
             localeId,
             value
         );
+        return result;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public ResourceDto getById(final String id) {
+        expectNotEmpty(id, "id cannot be empty.");
+        logger.debug("Getting Resource by id:'{}'...", id);
+
+        final Resource resource = resourceService.getById(id);
+        final ResourceDto result = mapper.map(resource, ResourceDto.class);
+
+        logger.info("Done getting Resource by id:'{}'.", id);
         return result;
     }
 }
