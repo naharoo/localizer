@@ -1,5 +1,6 @@
 package com.naharoo.localizer.endpoint.resource;
 
+import com.naharoo.localizer.domain.GenericListResponse;
 import com.naharoo.localizer.endpoint.LocalizerApiErrorDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -88,4 +89,77 @@ public interface ResourcesEndpoint {
         @NotBlank @PathVariable(value = "key", required = false) String key,
         @NotBlank @PathVariable(value = "localeKey", required = false) String localeKey
     );
+
+    @ApiOperation(
+        value = "Searches for Resources list",
+        notes = "Gets filtered, sorted and paginated Resources list"
+    )
+    @ApiResponses({
+        @ApiResponse(
+            code = 200,
+            message = "Successfully got filtered, sorted and paginated Resources list",
+            response = ResourceDto.class,
+            responseContainer = "List"
+        ),
+        @ApiResponse(
+            code = 400,
+            message = "Request data violates some constraints",
+            response = LocalizerApiErrorDto.class
+        )
+    })
+    @PostMapping("/search")
+    @ResponseStatus(HttpStatus.OK)
+    GenericListResponse<ResourceDto> search(@NotNull @Valid @RequestBody ResourceSearchRequestDto searchRequestDto);
+
+    @ApiOperation(
+        value = "Delete a Resource by id",
+        notes = "Deletes a Resource using provided id",
+        response = ResourceDto.class
+    )
+    @ApiResponses({
+        @ApiResponse(
+            code = 200,
+            message = "Successfully deleted a Resource",
+            response = ResourceDto.class
+        ),
+        @ApiResponse(
+            code = 404,
+            message = "No Resource has been found for provided id",
+            response = LocalizerApiErrorDto.class
+        ),
+        @ApiResponse(
+            code = 400,
+            message = "Request data violates some constraints",
+            response = LocalizerApiErrorDto.class
+        )
+    })
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    ResourceDto delete(@NotBlank @PathVariable(value = "id", required = false) String id);
+
+    @ApiOperation(
+        value = "Update a Resource",
+        notes = "Updates a Resource identified with provided id by provided data",
+        response = ResourceDto.class
+    )
+    @ApiResponses({
+        @ApiResponse(
+            code = 200,
+            message = "Successfully updated a Resource",
+            response = ResourceDto.class
+        ),
+        @ApiResponse(
+            code = 404,
+            message = "No Resource has been found for provided id",
+            response = LocalizerApiErrorDto.class
+        ),
+        @ApiResponse(
+            code = 400,
+            message = "Request data violates some constraints",
+            response = LocalizerApiErrorDto.class
+        )
+    })
+    @PutMapping
+    @ResponseStatus(HttpStatus.OK)
+    ResourceDto update(@NotNull @Valid @RequestBody ResourceModificationRequestDto modificationRequestDto);
 }

@@ -72,7 +72,7 @@ class SearchLocalesEndpointTest extends AbstractEndpointTest {
         // Then
         assertNotNull(response);
         final List<LocaleDto> actualLocales = response.getItems();
-        assertThatListAreFieldByFieldEqual(expectedLocales, actualLocales);
+        assertThatListsAreEqualIgnoringFields(expectedLocales, actualLocales);
         final long actualTotalItems = response.getTotalItems();
         assertEquals(expectedTotalItems, actualTotalItems);
 

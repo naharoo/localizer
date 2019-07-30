@@ -24,7 +24,7 @@ public class ResourceModificationRequestDto {
     @NotBlank
     @ApiModelProperty(
         notes = "The new key of the Resource which should stay unique together with Resource's Locale. The older key will be updated with provided one.",
-        example = "en-US",
+        example = "document",
         required = true,
         position = 1
     )
