@@ -14,7 +14,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-@Api(tags = "Resources", description = "Resources & relative endpoints")
+@Api(tags = "Resources", description = "Resource Management & relative endpoints")
 @RequestMapping(value = "/resources")
 @RestController
 @Validated
@@ -92,7 +92,9 @@ public interface ResourcesEndpoint {
 
     @ApiOperation(
         value = "Searches for Resources list",
-        notes = "Gets filtered, sorted and paginated Resources list"
+        notes = "Gets filtered, sorted and paginated Resources list",
+        response = ResourceDto.class,
+        responseContainer = "List"
     )
     @ApiResponses({
         @ApiResponse(

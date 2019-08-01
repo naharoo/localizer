@@ -9,7 +9,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-@ApiModel(description = "Class representing a Locale in the application")
+@ApiModel(description = "Represents a Locale")
 public class LocaleDto {
 
     @ApiModelProperty(

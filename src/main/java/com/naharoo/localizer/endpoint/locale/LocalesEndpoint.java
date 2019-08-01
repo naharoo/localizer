@@ -14,7 +14,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-@Api(tags = "Locales", description = "Locales & relative endpoints")
+@Api(tags = "Locales", description = "Locale Management & relative endpoints")
 @RequestMapping(value = "/locales")
 @RestController
 @Validated
@@ -89,7 +89,9 @@ public interface LocalesEndpoint {
 
     @ApiOperation(
         value = "Searches for Locales list",
-        notes = "Gets filtered, sorted and paginated Locales list"
+        notes = "Gets filtered, sorted and paginated Locales list",
+        response = LocaleDto.class,
+        responseContainer = "List"
     )
     @ApiResponses({
         @ApiResponse(

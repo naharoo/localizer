@@ -9,7 +9,7 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 
 @Data
-@ApiModel(description = "Class containing all new values for Resource modification")
+@ApiModel(description = "Contains all new values for Resource modification")
 public class ResourceModificationRequestDto {
 
     @NotBlank
@@ -23,7 +23,8 @@ public class ResourceModificationRequestDto {
 
     @NotBlank
     @ApiModelProperty(
-        notes = "The new key of the Resource which should stay unique together with Resource's Locale. The older key will be updated with provided one.",
+        notes = "The new key of the Resource which should stay unique together with Resource's Locale. " +
+            "The older key will be updated with provided one.",
         example = "document",
         required = true,
         position = 1

@@ -9,12 +9,13 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 
 @Data
-@ApiModel(description = "Class containing all necessary data for Resource creation")
+@ApiModel(description = "Contains all necessary data for Resource creation")
 public class ResourceCreationRequestDto {
 
     @NotBlank
     @ApiModelProperty(
-        notes = "Key of the Resource. Together with Locale is composite unique identifier of Resource. No two resources can have the same key + locale pair.",
+        notes = "Key of the Resource. Together with Locale is composite unique identifier of Resource. " +
+            "No two resources can have the same key + locale pair.",
         example = "document",
         required = true,
         position = 0
@@ -23,7 +24,8 @@ public class ResourceCreationRequestDto {
 
     @NotBlank
     @ApiModelProperty(
-        notes = "LocaleId of Resource. Together with Key is composite unique identifier of Resource. No two resources can have the same key + locale pair.",
+        notes = "LocaleId of Resource. Together with Key is composite unique identifier of Resource. " +
+            "No two resources can have the same key + locale pair.",
         example = "4370dff7-a73a-47a3-9672-fa2379deae5b",
         required = true,
         position = 1

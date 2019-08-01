@@ -11,7 +11,7 @@ import lombok.Data;
 import javax.validation.constraints.Min;
 
 @Data
-@ApiModel(description = "Class containing all necessary data for Resource search")
+@ApiModel(description = "Contains all necessary data for Resource search")
 public class ResourceSearchRequestDto {
 
     private static final int DEFAULT_FROM = 0;
@@ -20,14 +20,16 @@ public class ResourceSearchRequestDto {
     private static final SortOrder DEFAULT_SORT_ORDER = SortOrder.ASC;
 
     @ApiModelProperty(
-        notes = "Query string which will be searched in Resource' key field. No filtering by query will be applied if null is provided.",
+        notes = "Query string which will be searched in Resource' key field. " +
+            "No filtering by query will be applied if null is provided.",
         example = "doc",
         position = 0
     )
     private final String query;
 
     @ApiModelProperty(
-        notes = "Query string which will be searched in Locales' key and name fields. No filtering by query will be applied if null is provided.",
+        notes = "Query string which will be searched in Locales' key and name fields. " +
+            "No filtering by query will be applied if null is provided.",
         example = "en-US",
         position = 1
     )
@@ -35,7 +37,8 @@ public class ResourceSearchRequestDto {
 
     @Min(0)
     @ApiModelProperty(
-        notes = "Specifies from which index should sorted Resource list be fetched. Default value 0 will be picked if not provided.",
+        notes = "Specifies from which index should sorted Resource list be fetched. " +
+            "Default value 0 will be picked if not provided.",
         example = "0",
         position = 2
     )
@@ -50,14 +53,16 @@ public class ResourceSearchRequestDto {
     private final Integer size;
 
     @ApiModelProperty(
-        notes = "Specifies which Resource field will be used for sorting. Default value ID will be picked if not provided.",
+        notes = "Specifies which Resource field will be used for sorting. " +
+            "Default value ID will be picked if not provided.",
         example = "ID",
         position = 4
     )
     private final ResourceSortField sortField;
 
     @ApiModelProperty(
-        notes = "Specifies in which order Resource should be sorting. Default value ASC will be picked if not provided.",
+        notes = "Specifies in which order Resource should be sorting. " +
+            "Default value ASC will be picked if not provided.",
         example = "ASC",
         position = 5
     )

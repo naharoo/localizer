@@ -9,7 +9,7 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 
 @Data
-@ApiModel(description = "Class containing all necessary data for Locale creation")
+@ApiModel(description = "Contains all necessary data for Locale creation")
 public class LocaleCreationRequestDto {
 
     @NotBlank

@@ -9,7 +9,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-@ApiModel(description = "Class representing Localizer Api Errors and containing their data")
+@ApiModel(description = "Represents Localizer Api Errors and containing their data")
 public final class LocalizerApiErrorDto {
 
     @ApiModelProperty(
@@ -22,7 +22,7 @@ public final class LocalizerApiErrorDto {
 
     @ApiModelProperty(
         notes = "Response Messages.",
-        example = "['getById.id': 'must not be blank']",
+        example = "[{'getById.id': 'must not be blank'}]",
         required = true,
         position = 1
     )

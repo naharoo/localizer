@@ -11,7 +11,7 @@ import lombok.Data;
 import javax.validation.constraints.Min;
 
 @Data
-@ApiModel(description = "Class containing all necessary data for Locale search")
+@ApiModel(description = "Contains all necessary data for Locale search")
 public class LocaleSearchRequestDto {
 
     private static final int DEFAULT_FROM = 0;
