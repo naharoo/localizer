@@ -6,12 +6,12 @@ import com.naharoo.localizer.domain.locale.LocaleCreationRequest;
 import com.naharoo.localizer.domain.locale.LocaleModificationRequest;
 import com.naharoo.localizer.domain.locale.LocaleSearchRequest;
 import com.naharoo.localizer.mapper.BeanMapper;
+import com.naharoo.localizer.service.ResourceManager;
 import com.naharoo.localizer.service.locale.LocaleService;
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 
 import static com.naharoo.localizer.utils.Assertions.expectNotEmpty;
 import static com.naharoo.localizer.utils.Assertions.expectNotNull;
@@ -23,13 +23,18 @@ public class LocalesEndpointImpl implements LocalesEndpoint {
 
     private final BeanMapper mapper;
     private final LocaleService localeService;
+    private final ResourceManager resourceManager;
 
-    public LocalesEndpointImpl(final BeanMapper mapper, final LocaleService localeService) {
+    public LocalesEndpointImpl(
+        final BeanMapper mapper,
+        final LocaleService localeService,
+        final ResourceManager resourceManager
+    ) {
         this.mapper = mapper;
         this.localeService = localeService;
+        this.resourceManager = resourceManager;
     }
 
-    @Transactional
     @Override
     public LocaleDto create(final LocaleCreationRequestDto creationRequestDto) {
         expectNotNull(creationRequestDto, "creationRequestDto cannot be null.");
@@ -48,7 +53,6 @@ public class LocalesEndpointImpl implements LocalesEndpoint {
         return createdLocale;
     }
 
-    @Transactional(readOnly = true)
     @Override
     public LocaleDto getById(final String id) {
         expectNotEmpty(id, "id cannot be empty.");
@@ -62,7 +66,6 @@ public class LocalesEndpointImpl implements LocalesEndpoint {
         return result;
     }
 
-    @Transactional(readOnly = true)
     @Override
     public LocaleDto getByKey(final String key) {
         expectNotEmpty(key, "key cannot be empty.");
@@ -76,7 +79,6 @@ public class LocalesEndpointImpl implements LocalesEndpoint {
         return result;
     }
 
-    @Transactional(readOnly = true)
     @Override
     public GenericListResponse<LocaleDto> search(final LocaleSearchRequestDto searchRequestDto) {
         expectNotNull(searchRequestDto, "searchRequestDto cannot be null.");
@@ -101,21 +103,19 @@ public class LocalesEndpointImpl implements LocalesEndpoint {
         return response;
     }
 
-    @Transactional
     @Override
     public LocaleDto delete(final String id) {
         expectNotEmpty(id, "id cannot be empty.");
 
         logger.debug("Deleting Locale by id:'{}'...", id);
 
-        final Locale locale = localeService.delete(id);
+        final Locale locale = resourceManager.cascadeDeleteLocale(id);
         final LocaleDto result = mapper.map(locale, LocaleDto.class);
 
         logger.info("Done deleting Locale by id:'{}'.", id);
         return result;
     }
 
-    @Transactional
     @Override
     public LocaleDto update(final LocaleModificationRequestDto modificationRequestDto) {
         expectNotNull(modificationRequestDto, "modificationRequestDto cannot be null.");

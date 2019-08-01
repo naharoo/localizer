@@ -7,8 +7,8 @@ import com.naharoo.localizer.domain.locale.LocaleModificationRequest;
 import com.naharoo.localizer.domain.locale.LocaleSearchRequest;
 import com.naharoo.localizer.exception.ResourceAlreadyExistsException;
 import com.naharoo.localizer.exception.ResourceNotFoundException;
+import com.naharoo.localizer.helper.LocaleTestHelper;
 import com.naharoo.localizer.repository.LocaleRepository;
-import com.naharoo.localizer.service.locale.LocaleTestHelper;
 import com.naharoo.localizer.testutils.UnitTest;
 import com.naharoo.localizer.testutils.source.EmptyStringSource;
 import org.junit.jupiter.api.AfterEach;
@@ -52,24 +52,6 @@ class LocaleServiceImplTest {
         );
     }
 
-    static Stream<LocaleCreationRequest> illegalCreationArguments() {
-        return Stream.of(
-            null,
-            new LocaleCreationRequest(null, UUID.randomUUID().toString()),
-            new LocaleCreationRequest(UUID.randomUUID().toString(), null)
-        );
-    }
-
-    static Stream<LocaleModificationRequest> illegalModificationArguments() {
-        return Stream.of(
-            null,
-            new LocaleModificationRequest(null, null, null),
-            new LocaleModificationRequest(null, UUID.randomUUID().toString(), UUID.randomUUID().toString()),
-            new LocaleModificationRequest(UUID.randomUUID().toString(), null, UUID.randomUUID().toString()),
-            new LocaleModificationRequest(UUID.randomUUID().toString(), UUID.randomUUID().toString(), null)
-        );
-    }
-
     @AfterEach
     void tearDown() {
         validateMockitoUsage();
@@ -104,15 +86,14 @@ class LocaleServiceImplTest {
         verify(repository).save(any(Locale.class));
     }
 
-    @MethodSource("illegalCreationArguments")
-    @ParameterizedTest(name = "Input: {arguments}")
-    @DisplayName("An IllegalArgumentException should be thrown when Input is not valid")
-    void create_illegalArgs(final LocaleCreationRequest request) {
+    @Test
+    @DisplayName("An IllegalArgumentException should be thrown when Input is null")
+    void create_illegalArgs() {
         // Given
         // Illegal Args
 
         // When
-        assertThrows(IllegalArgumentException.class, () -> service.create(request));
+        assertThrows(IllegalArgumentException.class, () -> service.create(null));
 
         // Then
         // IllegalArgumentException is thrown
@@ -406,21 +387,19 @@ class LocaleServiceImplTest {
         assertNotNull(updated);
         final LocalDateTime deleted = actualLocale.getDeleted();
         assertNotNull(deleted);
-        assertEquals(updated, deleted);
 
         verify(spy).getById(id);
         verify(repository).save(any(Locale.class));
     }
 
-    @ParameterizedTest(name = "Input: {arguments}")
-    @MethodSource("illegalModificationArguments")
-    @DisplayName("Update should throw IllegalArgumentException when input is not valid")
-    void update_illegalArgs(final LocaleModificationRequest modificationRequest) {
+    @Test
+    @DisplayName("Update should throw IllegalArgumentException when input is null")
+    void update_illegalArgs() {
         // Given
         // Illegal Input
 
         // When
-        assertThrows(IllegalArgumentException.class, () -> service.update(modificationRequest));
+        assertThrows(IllegalArgumentException.class, () -> service.update(null));
 
         // Then
         // IllegalArgumentException is thrown

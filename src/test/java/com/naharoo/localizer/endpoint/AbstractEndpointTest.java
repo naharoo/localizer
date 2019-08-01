@@ -1,6 +1,7 @@
 package com.naharoo.localizer.endpoint;
 
 import com.naharoo.localizer.mapper.BeanMapper;
+import org.assertj.core.api.ObjectAssert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,13 +31,17 @@ public abstract class AbstractEndpointTest {
         );
     }
 
-    protected void assertThatListAreFieldByFieldEqual(final List expected, final List actual) {
+    protected void assertThatListsAreEqualIgnoringFields(final List expected, final List actual, final String... fieldNames) {
         assertNotNull(expected);
         assertNotNull(actual);
         assertEquals(actual.size(), expected.size());
         for (int i = 0; i < actual.size(); i++) {
-            assertThat(actual.get(i))
-                .isEqualToComparingFieldByField(expected.get(i));
+            final ObjectAssert<Object> assertion = assertThat(actual.get(i));
+            if (fieldNames == null) {
+                assertion.isEqualToComparingFieldByField(expected.get(i));
+            } else {
+                assertion.isEqualToIgnoringGivenFields(expected.get(i), fieldNames);
+            }
         }
     }
 }

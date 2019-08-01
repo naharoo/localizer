@@ -9,10 +9,11 @@
         <jsr107:defaults enable-management="false" enable-statistics="false" default-template="tiny"/>
     </service>
 
-    <cache alias="default-query-results-region" uses-template="tiny"/>
+    <cache alias="default-query-results-region" uses-template="rareUpdate"/>
     <cache alias="default-update-timestamps-region" uses-template="tiny"/>
 
     <cache alias="com.naharoo.localizer.domain.locale.Locale" uses-template="rareUpdate"/>
+    <cache alias="com.naharoo.localizer.domain.resource.Resource" uses-template="rareUpdate"/>
 
     <cache-template name="tiny">
         <expiry>
@@ -40,7 +41,7 @@
         </expiry>
         <heap unit="MB">10</heap>
         <heap-store-settings>
-            <max-object-size unit="MB">1</max-object-size>
+            <max-object-size unit="MB">5</max-object-size>
         </heap-store-settings>
     </cache-template>
 

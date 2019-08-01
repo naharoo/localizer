@@ -38,6 +38,7 @@
         <orika.version>1.5.4</orika.version>
         <javassist.version>3.25.0-GA</javassist.version>
         <springfox-swagger.version>2.9.2</springfox-swagger.version>
+        <ehcache.version>3.8.0</ehcache.version>
         <validation-api.version>2.0.1.Final</validation-api.version>
         <jsr305.version>3.0.2</jsr305.version>
         <logstash-logback-encoder.version>6.1</logstash-logback-encoder.version>
@@ -45,7 +46,6 @@
         <maven.surefire.plugin.version>2.22.2</maven.surefire.plugin.version>
         <sonar-maven-plugin.version>3.6.0.1398</sonar-maven-plugin.version>
         <jacoco.maven.plugin.version>0.8.3</jacoco.maven.plugin.version>
-        <apt-maven-plugin.version>1.1.3</apt-maven-plugin.version>
         <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
         <dockerfile-maven-version>1.4.10</dockerfile-maven-version>
 
@@ -111,16 +111,6 @@
             <artifactId>hibernate-jcache</artifactId>
         </dependency>
 
-        <!--QueryDSL-->
-        <dependency>
-            <groupId>com.querydsl</groupId>
-            <artifactId>querydsl-apt</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.querydsl</groupId>
-            <artifactId>querydsl-jpa</artifactId>
-        </dependency>
-
         <!--Ehcache-->
         <dependency>
             <groupId>javax.cache</groupId>
@@ -163,6 +153,7 @@
             <artifactId>springfox-bean-validators</artifactId>
         </dependency>
 
+        <!--Lombok-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -239,10 +230,6 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                     </plugin>
                     <plugin>
-                        <groupId>com.mysema.maven</groupId>
-                        <artifactId>apt-maven-plugin</artifactId>
-                    </plugin>
-                    <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-deploy-plugin</artifactId>
                     </plugin>
@@ -274,10 +261,6 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <groupId>com.mysema.maven</groupId>
-                        <artifactId>apt-maven-plugin</artifactId>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -353,22 +336,6 @@
                     <groupId>org.sonarsource.scanner.maven</groupId>
                     <artifactId>sonar-maven-plugin</artifactId>
                     <version>${sonar-maven-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>com.mysema.maven</groupId>
-                    <artifactId>apt-maven-plugin</artifactId>
-                    <version>${apt-maven-plugin.version}</version>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>process</goal>
-                            </goals>
-                            <configuration>
-                                <outputDirectory>target/generated-sources/java</outputDirectory>
-                                <processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
-                            </configuration>
-                        </execution>
-                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -483,24 +450,18 @@
                 <version>${validation-api.version}</version>
             </dependency>
 
+            <!--Ehcache-->
+            <dependency>
+                <groupId>org.ehcache</groupId>
+                <artifactId>ehcache</artifactId>
+                <version>${ehcache.version}</version>
+            </dependency>
+
             <!--Logstash for Logback-->
             <dependency>
                 <groupId>net.logstash.logback</groupId>
                 <artifactId>logstash-logback-encoder</artifactId>
                 <version>${logstash-logback-encoder.version}</version>
-            </dependency>
-
-            <!--QueryDSL-->
-            <dependency>
-                <groupId>com.querydsl</groupId>
-                <artifactId>querydsl-apt</artifactId>
-                <version>${querydsl.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.querydsl</groupId>
-                <artifactId>querydsl-jpa</artifactId>
-                <version>${querydsl.version}</version>
             </dependency>
 
             <!--FindBugs JSR-305-->

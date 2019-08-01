@@ -21,6 +21,7 @@
 
     <jdbc:initialize-database>
         <jdbc:script location="classpath:com/naharoo/localizer/db/scripts/l_locale.sql"/>
+        <jdbc:script location="classpath:com/naharoo/localizer/db/scripts/l_resource.sql"/>
     </jdbc:initialize-database>
 
     <bean id="hibernateJpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>

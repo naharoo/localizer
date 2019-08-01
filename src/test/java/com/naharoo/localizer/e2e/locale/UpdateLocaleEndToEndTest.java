@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.naharoo.localizer.e2e.AbstractEndToEndTest;
 import com.naharoo.localizer.endpoint.locale.LocaleDto;
 import com.naharoo.localizer.endpoint.locale.LocaleModificationRequestDto;
-import com.naharoo.localizer.service.locale.LocaleTestHelper;
+import com.naharoo.localizer.helper.LocaleTestHelper;
 import com.naharoo.localizer.testutils.json.JsonWrapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

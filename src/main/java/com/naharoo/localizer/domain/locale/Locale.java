@@ -7,19 +7,18 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "l_locale",
     uniqueConstraints = {
-        @UniqueConstraint(name = "l_locale_id_deleted_uk", columnNames = {"id", "deleted"}),
+        @UniqueConstraint(name = "l_locale_id_pk", columnNames = "id"),
         @UniqueConstraint(name = "l_locale_key_deleted_uk", columnNames = {"key", "deleted"})
     },
     indexes = {
-        @Index(name = "l_locale_id_deleted_index", columnList = "id, deleted", unique = true),
-        @Index(name = "l_locale_key_deleted_index", columnList = "key, deleted", unique = true)
+        @Index(name = "l_locale_id_pk", columnList = "id", unique = true),
+        @Index(name = "l_locale_key_deleted_uk", columnList = "key, deleted", unique = true)
     }
 )
 @Cacheable
@@ -34,16 +33,12 @@ public class Locale extends Domain {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "deleted")
-    private LocalDateTime deleted;
-
     public Locale() {
-        super(null, null, null);
-
+        this(null, null);
     }
 
     public Locale(final String key, final String name) {
-        super(null, null, null);
+        super(null, null, null, null);
         this.key = key;
         this.name = name;
     }

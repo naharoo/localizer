@@ -4,10 +4,18 @@ import com.naharoo.localizer.domain.locale.Locale;
 import com.naharoo.localizer.domain.locale.LocaleCreationRequest;
 import com.naharoo.localizer.domain.locale.LocaleModificationRequest;
 import com.naharoo.localizer.domain.locale.LocaleSearchRequest;
+import com.naharoo.localizer.domain.resource.Resource;
+import com.naharoo.localizer.domain.resource.ResourceCreationRequest;
+import com.naharoo.localizer.domain.resource.ResourceModificationRequest;
+import com.naharoo.localizer.domain.resource.ResourceSearchRequest;
 import com.naharoo.localizer.endpoint.locale.LocaleCreationRequestDto;
 import com.naharoo.localizer.endpoint.locale.LocaleDto;
 import com.naharoo.localizer.endpoint.locale.LocaleModificationRequestDto;
 import com.naharoo.localizer.endpoint.locale.LocaleSearchRequestDto;
+import com.naharoo.localizer.endpoint.resource.ResourceCreationRequestDto;
+import com.naharoo.localizer.endpoint.resource.ResourceDto;
+import com.naharoo.localizer.endpoint.resource.ResourceModificationRequestDto;
+import com.naharoo.localizer.endpoint.resource.ResourceSearchRequestDto;
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.converter.ConverterFactory;
 import ma.glasnost.orika.converter.builtin.PassThroughConverter;
@@ -36,19 +44,34 @@ public class BeanMapper extends ConfigurableMapper {
             .constructorB("id", "key", "name", "created", "updated", "deleted")
             .byDefault()
             .register();
-
         factory.classMap(LocaleCreationRequest.class, LocaleCreationRequestDto.class)
             .constructorB("key", "name")
             .byDefault()
             .register();
-
         factory.classMap(LocaleSearchRequest.class, LocaleSearchRequestDto.class)
             .constructorB("query", "from", "size", "sortField", "sortOrder")
             .byDefault()
             .register();
-
         factory.classMap(LocaleModificationRequest.class, LocaleModificationRequestDto.class)
             .constructorB("id", "key", "name")
+            .byDefault()
+            .register();
+
+        // Resources
+        factory.classMap(Resource.class, ResourceDto.class)
+            .constructorB("id", "key", "locale", "value", "created", "updated", "deleted")
+            .byDefault()
+            .register();
+        factory.classMap(ResourceCreationRequest.class, ResourceCreationRequestDto.class)
+            .constructorB("key", "localeId", "value")
+            .byDefault()
+            .register();
+        factory.classMap(ResourceModificationRequest.class, ResourceModificationRequestDto.class)
+            .constructorB("id", "key", "value")
+            .byDefault()
+            .register();
+        factory.classMap(ResourceSearchRequest.class, ResourceSearchRequestDto.class)
+            .constructorB("query", "localeQuery", "from", "size", "sortField", "sortOrder")
             .byDefault()
             .register();
     }

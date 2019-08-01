@@ -27,9 +27,18 @@ public abstract class Domain implements Serializable {
     @Column(name = "updated", nullable = false)
     private LocalDateTime updated;
 
-    public Domain(final String id, final LocalDateTime created, final LocalDateTime updated) {
+    @Column(name = "deleted")
+    private LocalDateTime deleted;
+
+    public Domain(
+        final String id,
+        final LocalDateTime created,
+        final LocalDateTime updated,
+        final LocalDateTime deleted
+    ) {
         this.id = id;
         this.created = created;
         this.updated = updated;
+        this.deleted = deleted;
     }
 }

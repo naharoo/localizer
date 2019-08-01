@@ -4,8 +4,8 @@ import com.naharoo.localizer.domain.GenericListResponse;
 import com.naharoo.localizer.domain.locale.Locale;
 import com.naharoo.localizer.domain.locale.LocaleSearchRequest;
 import com.naharoo.localizer.endpoint.AbstractEndpointTest;
+import com.naharoo.localizer.helper.LocaleTestHelper;
 import com.naharoo.localizer.service.locale.LocaleService;
-import com.naharoo.localizer.service.locale.LocaleTestHelper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -72,7 +72,7 @@ class SearchLocalesEndpointTest extends AbstractEndpointTest {
         // Then
         assertNotNull(response);
         final List<LocaleDto> actualLocales = response.getItems();
-        assertThatListAreFieldByFieldEqual(expectedLocales, actualLocales);
+        assertThatListsAreEqualIgnoringFields(expectedLocales, actualLocales);
         final long actualTotalItems = response.getTotalItems();
         assertEquals(expectedTotalItems, actualTotalItems);
 

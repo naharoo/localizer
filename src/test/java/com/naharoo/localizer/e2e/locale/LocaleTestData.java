@@ -1,9 +1,8 @@
 package com.naharoo.localizer.e2e.locale;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import lombok.Data;
 
+@Data
 public class LocaleTestData {
 
     private final String id;
@@ -16,57 +15,5 @@ public class LocaleTestData {
         this.key = key;
         this.name = name;
         this.deleted = deleted;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        if (this == object) return true;
-
-        if (object == null || getClass() != object.getClass()) return false;
-
-        LocaleTestData that = (LocaleTestData) object;
-
-        return new EqualsBuilder()
-            .append(id, that.id)
-            .append(key, that.key)
-            .append(name, that.name)
-            .append(deleted, that.deleted)
-            .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-            .append(id)
-            .append(key)
-            .append(name)
-            .append(deleted)
-            .toHashCode();
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-            .append("id", id)
-            .append("key", key)
-            .append("name", name)
-            .append("deleted", deleted)
-            .toString();
     }
 }
